@@ -1,4 +1,4 @@
-package ar.nic.demoproject.model;
+package ar.nic.demoproject.db.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
@@ -12,14 +12,25 @@ import java.util.Date;
 public class Transaction {
 
     @Id
-    @Column("id")
+    @Column("transactionId")
     private Integer id;
 
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Float amount;
 
+    @Schema(maxLength = 3,requiredMode = Schema.RequiredMode.REQUIRED)
     private String currency;
 
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Date date;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Float getAmount() {
         return amount;

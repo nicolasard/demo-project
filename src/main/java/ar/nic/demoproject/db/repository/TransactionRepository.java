@@ -1,6 +1,6 @@
-package ar.nic.demoproject.repository;
+package ar.nic.demoproject.db.repository;
 
-import ar.nic.demoproject.model.Transaction;
+import ar.nic.demoproject.db.model.Transaction;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 

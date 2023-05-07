@@ -9,13 +9,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http){
-        http.csrf().disable().cors().disable().authorizeExchange().pathMatchers("/actuator/**", "/swagger-ui/**").permitAll()
+        http.csrf().disable().cors().disable().authorizeExchange().pathMatchers("/actuator/**", "/swagger-ui/**", "/**").permitAll()
                 .anyExchange().authenticated().and().oauth2ResourceServer().jwt();
         return http.build();
     }

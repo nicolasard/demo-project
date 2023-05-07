@@ -1,7 +1,8 @@
 package ar.nic.demoproject.services;
 
-import ar.nic.demoproject.model.Transaction;
-import ar.nic.demoproject.repository.TransactionRepository;
+import ar.nic.demoproject.db.model.Transaction;
+import ar.nic.demoproject.db.model.UserProfile;
+import ar.nic.demoproject.db.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -17,11 +18,11 @@ public class TransactionService
         this.transactionRepository = transactionRepository;
     }
 
-    public Flux<Transaction> getTransactions(){
+    public Flux<Transaction> getTransactions(final UserProfile principal){
         return this.transactionRepository.findAll();
     }
 
-    public Mono<Transaction> saveTransaction(final Mono<Transaction> transaction){
+    public Mono<Transaction> saveTransaction(final Mono<Transaction> transaction, final UserProfile principal){
         return transaction.flatMap(transactionRepository::save);
     }
 }

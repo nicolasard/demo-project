@@ -1,7 +1,7 @@
 package ar.nic.demoproject.controllers;
 
-import ar.nic.demoproject.model.Transaction;
-import ar.nic.demoproject.model.UserProfile;
+import ar.nic.demoproject.db.model.Transaction;
+import ar.nic.demoproject.db.model.UserProfile;
 import ar.nic.demoproject.services.TransactionService;
 import ar.nic.demoproject.utils.PrincipalMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +28,17 @@ public class UserController {
 
     @GetMapping("/transactions")
     Flux<Transaction> getTransactions(Principal principal) {
-        return transactionService.getTransactions();
+        return transactionService.getTransactions(PrincipalMapper.getUserProfile(principal));
     }
 
     @PostMapping("/transactions")
     Mono<Transaction> postTransactions(Principal principal, @RequestBody Mono<Transaction> transaction) {
-        return transactionService.saveTransaction(transaction);
+        return transactionService.saveTransaction(transaction,PrincipalMapper.getUserProfile(principal));
     }
 
     @PutMapping("/transactions")
     Mono<Transaction> putTransactions(Principal principal, @RequestBody Mono<Transaction> transaction) {
-        return transactionService.saveTransaction(transaction);
+        return transactionService.saveTransaction(transaction,PrincipalMapper.getUserProfile(principal));
     }
 
 }

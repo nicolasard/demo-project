@@ -1,6 +1,6 @@
 package ar.nic.demoproject.utils;
 
-import ar.nic.demoproject.model.UserProfile;
+import ar.nic.demoproject.db.model.UserProfile;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.security.Principal;

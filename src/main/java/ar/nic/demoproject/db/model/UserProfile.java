@@ -1,4 +1,4 @@
-package ar.nic.demoproject.model;
+package ar.nic.demoproject.db.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
