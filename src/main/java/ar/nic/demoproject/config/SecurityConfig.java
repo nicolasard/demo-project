@@ -15,7 +15,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http){
-        http.csrf().disable().cors().disable().authorizeExchange().pathMatchers("/actuator/**", "/swagger-ui/**", "/**").permitAll()
+        http.csrf().disable().cors().disable().authorizeExchange().pathMatchers("/actuator/**", "/swagger-ui/**").permitAll()
                 .anyExchange().authenticated().and().oauth2ResourceServer().jwt();
         return http.build();
     }

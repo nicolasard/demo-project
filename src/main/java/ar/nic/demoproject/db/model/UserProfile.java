@@ -1,8 +1,10 @@
 package ar.nic.demoproject.db.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Schema(title = "User", description = "The user information in the system.")
+@Table("users")
 public class UserProfile {
 
     public UserProfile(String fullName, String email) {
@@ -15,6 +17,9 @@ public class UserProfile {
 
     @Schema(example = "john@example.com")
     private String email;
+
+    private Integer internalId;
+
 
     public String getFullName() {
         return fullName;
@@ -30,5 +35,13 @@ public class UserProfile {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getInternalId() {
+        return internalId;
+    }
+
+    public void setInternalId(Integer internalId) {
+        this.internalId = internalId;
     }
 }

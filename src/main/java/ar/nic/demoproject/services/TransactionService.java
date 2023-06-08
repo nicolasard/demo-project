@@ -19,10 +19,10 @@ public class TransactionService
     }
 
     public Flux<Transaction> getTransactions(final UserProfile principal){
-        return this.transactionRepository.findAll();
+        return this.transactionRepository.findAllByUserInternalId(Mono.just(principal.getInternalId()));
     }
 
     public Mono<Transaction> saveTransaction(final Mono<Transaction> transaction, final UserProfile principal){
-        return transaction.flatMap(transactionRepository::save);
+        return transaction.map(t->{t.setUserInternalId(principal.getInternalId()); return t;}).flatMap(transactionRepository::save);
     }
 }
