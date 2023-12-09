@@ -17,3 +17,7 @@ This will create in /target the binary native file demo-project that you can exe
 ```
 mvn -Pnative native:compile
 ```
+
+### Swagger documentation
+To check the swagger documentation enter to http://localhost:8080/swagger-ui.html
+

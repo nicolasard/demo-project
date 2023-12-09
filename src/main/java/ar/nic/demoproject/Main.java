@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(proxyBeanMethods = false)
-@OpenAPIDefinition(info = @Info(title = "Swagger Demo", version = "1.0", description = "Documentation APIs v1.0"))
+@OpenAPIDefinition(info = @Info(title = "Demo project", version = "1.0", description = "Documentation APIs v1.0"))
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
