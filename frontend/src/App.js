@@ -1,6 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 import { GoogleLogin } from '@react-oauth/google';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function App() {
 
@@ -13,17 +16,23 @@ function App() {
   }
   return (
     <div className="App">
-    <h2>Welcome to the demo app</h2>
-
-    <GoogleLogin
-      onSuccess={credentialResponse => {
-        document.cookie = 'jwt-token='+credentialResponse.credential;
-        console.log(credentialResponse);
-      }}
-      onError={() => {
-        console.log('Login Failed');
-      }}
-    />
+    <Container>
+        <Row>
+            <Col>
+                <h2>Login to Servus</h2>
+                <GoogleLogin
+                  onSuccess={credentialResponse => {
+                    document.cookie = 'jwt-token='+credentialResponse.credential;
+                    console.log(credentialResponse);
+                    window.location.reload(false);
+                  }}
+                  onError={() => {
+                    console.log('Login Failed');
+                  }}
+                />
+            </Col>
+        </Row>
+    </Container>
     </div>
   );
 }
