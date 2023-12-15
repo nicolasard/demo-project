@@ -9,8 +9,16 @@ import {
   Route,
   Routes
 } from "react-router-dom";
+import Cookies from 'universal-cookie';
+import Login from './modules/Login';
 
 function App() {
+
+  const cookies = new Cookies();
+  const auth = cookies.get('jwt-token');
+  if (auth==null){
+    return (<div><Login/></div>)
+  }
   return (
     <React.StrictMode>
       <Router>
