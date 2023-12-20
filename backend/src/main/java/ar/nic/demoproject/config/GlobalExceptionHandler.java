@@ -1,6 +1,9 @@
 package ar.nic.demoproject.config;
 
 import ar.nic.demoproject.entity.ErrorResponse;
+import ar.nic.demoproject.utils.PrincipalMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +18,8 @@ import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -36,6 +41,7 @@ public class GlobalExceptionHandler {
         }
         final ErrorResponse er = new ErrorResponse();
         er.setErrorDescription(ex.getLocalizedMessage());
+        logger.error("Unexpected error",ex);
         return Mono.just(er);
     }
 }
