@@ -25,4 +25,8 @@ public class TransactionService
     public Mono<Transaction> saveTransaction(final Mono<Transaction> transaction, final UserProfile principal){
         return transaction.map(t->{t.setUserInternalId(principal.getInternalId()); return t;}).flatMap(transactionRepository::save);
     }
+
+    public Mono<Void> deleteTransaction(final Mono<Transaction> transaction, final UserProfile principal){
+        return transaction.map(t->{t.setUserInternalId(principal.getInternalId()); return t;}).flatMap(transactionRepository::delete);
+    }
 }
