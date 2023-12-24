@@ -27,7 +27,7 @@ class MyAccount extends React.Component<any,{ name: string|null, email: string|n
       if (response.status==200){
         this.setState({ name: response.data.fullName!, email:response.data.email!, userId:response.data.internalId!});
       }
-    });
+    }).catch( e => console.log(e.response.data)); //Here I'm catching the exceptions. Later this component should trigger an event to show the errors;
   }
 
   render() {

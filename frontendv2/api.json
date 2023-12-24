@@ -1,88 +1,41 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-      "title": "Demo project",
-      "description": "Documentation APIs v1.0",
-      "version": "1.0"
-    },
-    "servers": [
-      {
-        "url": "http://localhost:8080",
-        "description": "Generated server url"
-      }
-    ],
-    "paths": {
-      "/transactions": {
-        "get": {
-          "tags": [
-            "user-controller"
-          ],
-          "operationId": "getTransactions",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "*/*": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Transaction"
-                    }
-                  }
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Demo project",
+    "description": "Documentation APIs v1.0",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/transactions": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getTransactions",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
-          }
-        },
-        "put": {
-          "tags": [
-            "user-controller"
-          ],
-          "operationId": "putTransactions",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Transaction"
-                }
-              }
-            },
-            "required": true
           },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "*/*": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Transaction"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "tags": [
-            "user-controller"
-          ],
-          "operationId": "postTransactions",
-          "requestBody": {
+          "200": {
+            "description": "OK",
             "content": {
-              "application/json": {
+              "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Transaction"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "*/*": {
-                  "schema": {
+                  "type": "array",
+                  "items": {
                     "$ref": "#/components/schemas/Transaction"
                   }
                 }
@@ -91,83 +44,226 @@
           }
         }
       },
-      "/getProfile": {
-        "get": {
-          "tags": [
-            "user-controller"
-          ],
-          "operationId": "getProfile",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "*/*": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UserProfile"
-                  }
+      "put": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "putTransactions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "postTransactions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "deleteTransactions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/getProfile": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getProfile",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfile"
                 }
               }
             }
           }
         }
       }
-    },
-    "components": {
-      "schemas": {
-        "Transaction": {
-          "title": "Transactions",
-          "required": [
-            "amount",
-            "currency",
-            "date"
-          ],
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "amount": {
-              "type": "number",
-              "format": "float"
-            },
-            "currency": {
-              "maxLength": 3,
-              "type": "string"
-            },
-            "date": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "userInternalId": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "description": {
-              "type": "string"
-            }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "errorDescription": {
+            "type": "string"
           },
-          "description": "Transactions made."
-        },
-        "UserProfile": {
-          "title": "User",
-          "type": "object",
-          "properties": {
-            "fullName": {
-              "type": "string",
-              "example": "John Doe"
-            },
-            "email": {
-              "type": "string",
-              "example": "john@example.com"
-            },
-            "internalId": {
-              "type": "integer",
-              "format": "int32"
+          "errorResponsesDetailsList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponsesDetails"
             }
-          },
-          "description": "The user information in the system."
+          }
         }
+      },
+      "ErrorResponsesDetails": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Transaction": {
+        "title": "Transactions",
+        "required": [
+          "amount",
+          "currency",
+          "date"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "currency": {
+            "maxLength": 3,
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userInternalId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "description": "Transactions made."
+      },
+      "UserProfile": {
+        "title": "User",
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com"
+          },
+          "internalId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "The user information in the system."
       }
     }
   }
+}
