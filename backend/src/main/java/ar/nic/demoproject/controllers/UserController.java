@@ -46,4 +46,9 @@ public class UserController {
         return principalMapper.getUserProfile(principal).map(t->transactionService.saveTransaction(transaction,t)).flatMap(f->f);
     }
 
+    @DeleteMapping("/transactions")
+    Mono<Void> deleteTransactions(Principal principal,@Valid  @RequestBody Mono<Transaction> transaction) {
+        return principalMapper.getUserProfile(principal).map(t->transactionService.deleteTransaction(transaction,t)).flatMap(f->f);
+    }
+
 }
