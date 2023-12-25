@@ -2,7 +2,7 @@ import React from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate, redirect } from 'react-router-dom'
 
 
 class AddPayment extends React.Component<{type: string, expenseId: string|undefined},{description : string|undefined, amount: number|null}>{
@@ -42,6 +42,8 @@ class AddPayment extends React.Component<{type: string, expenseId: string|undefi
     }
 
     saveToWs(){
+      
+
       const cookies = new Cookies();
       cookies.set('mycookie','valor',{ path: '/' });
       console.log(cookies.get("jwt-token"));
@@ -55,7 +57,12 @@ class AddPayment extends React.Component<{type: string, expenseId: string|undefi
           currency: 'ARS',
           date: this.getDate()
         };    
-      UserControllerApiFactory().postTransactions(transaction);
+      UserControllerApiFactory().postTransactions(transaction).then(
+        (response)=> {
+          const navigate = useNavigate();
+          navigate("/");
+        }
+      );
     }
       
 render() {

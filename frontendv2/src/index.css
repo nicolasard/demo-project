@@ -16,3 +16,7 @@ code {
   background-image: url('/public/nuremberg-background.avif');
   height: 100vh;
 }
+
+iframe{
+  display: inline-block !important;
+}

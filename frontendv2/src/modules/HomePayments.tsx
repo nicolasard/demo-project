@@ -27,8 +27,11 @@ class HomePayments extends React.Component<any,{transactions:Transaction[]}>{
         // Set your JWT token in the headers
         const jwtToken = cookies.get("jwt-token"); // Replace with your actual JWT token
         axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-        UserControllerApiFactory().deleteTransactions(transaction);
-        this.getTransactions();
+        UserControllerApiFactory().deleteTransactions(transaction).then(
+          (response) => {
+            this.getTransactions();
+          }
+        );
       }
 
       getTransactions(){
