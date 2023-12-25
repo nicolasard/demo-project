@@ -67,7 +67,7 @@ class AddPayment extends React.Component<{type: string, expenseId: string|undefi
       
 render() {
   return (
-<div>
+<div id='content'>
     <h4>Add Expense</h4>
     <form className="row g-3" onSubmit={this.handleSubmit}>
     <div className="mb-3 row">

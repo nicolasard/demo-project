@@ -12,10 +12,10 @@ function Navbar() {
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav me-auto mb-2 mb-lg-0">
         <li className="nav-item">
-          <a className="nav-link" aria-current="page" onClick={()=>navigate('/')}>My Expenses</a>
+          <a className="nav-link" aria-current="page" onClick={()=>navigate('/')}>Expenses</a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" onClick={()=>navigate('/myAccount')}>My Account</a>
+          <a className="nav-link" onClick={()=>navigate('/myAccount')}>Account</a>
         </li>
       </ul>
     </div>

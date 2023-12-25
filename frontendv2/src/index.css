@@ -20,3 +20,7 @@ code {
 iframe{
   display: inline-block !important;
 }
+
+#content{
+  margin: 2cqmin;
+}

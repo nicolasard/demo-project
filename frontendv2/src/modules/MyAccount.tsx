@@ -35,7 +35,7 @@ class MyAccount extends React.Component<any,{ name: string|null, email: string|n
       return(<div>Loading...</div>);
     }
     return (
-      <div>
+      <div id='content'>
           <h3>My account</h3>
           <div>ID: { this.state.userId }</div>
           <div>Your name: { this.state.name }</div>
