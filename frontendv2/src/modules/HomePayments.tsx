@@ -49,6 +49,11 @@ class HomePayments extends React.Component<any,{transactions:Transaction[]}>{
         }).catch( e => console.log(e.response.data)); //Here I'm catching the exceptions. Later this component should trigger an event to show the errors
       }
 
+parseDate(date: string){
+  const parsedDate = new Date(date);
+  return parsedDate.toLocaleDateString();
+}
+
 render() {
   return (
 <div>
@@ -65,7 +70,7 @@ render() {
         <tbody>
         {this.state.transactions.map(transaction => (
             <tr key={transaction.id}>
-            <td>{transaction.date}</td>
+            <td>{this.parseDate(transaction.date)}</td>
             <td>{transaction.description}</td>
             <td>Cash</td>
             <td>{transaction.amount} {transaction.currency}</td>

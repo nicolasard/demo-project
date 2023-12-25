@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 @Schema(title = "Transactions", description = "Transactions made.")
@@ -28,7 +29,7 @@ public class Transaction {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "Field 'date' must not be null or empty.")
-    private ZonedDateTime date;
+    private Instant date;
 
     @Column("userInternalId")
     private Integer userInternalId;
@@ -59,11 +60,11 @@ public class Transaction {
         this.currency = currency;
     }
 
-    public ZonedDateTime getDate() {
+    public Instant getDate() {
         return date;
     }
 
-    public void setDate(ZonedDateTime date) {
+    public void setDate(Instant date) {
         this.date = date;
     }
 

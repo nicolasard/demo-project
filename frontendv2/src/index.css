@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.bg-image{
+  background-image: url('/public/nuremberg-background.avif');
+  height: 100vh;
+}

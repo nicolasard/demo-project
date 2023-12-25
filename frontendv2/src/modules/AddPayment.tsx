@@ -35,6 +35,12 @@ class AddPayment extends React.Component<{type: string, expenseId: string|undefi
         event.preventDefault();
       }
 
+    getDate(){
+      const date = Date.now();
+      const date2 = new Date(date);
+      return date2.toISOString();
+    }
+
     saveToWs(){
       const cookies = new Cookies();
       cookies.set('mycookie','valor',{ path: '/' });
@@ -47,7 +53,7 @@ class AddPayment extends React.Component<{type: string, expenseId: string|undefi
           description: this.state.description,
           amount: this.state.amount!,
           currency: 'ARS',
-          date: '2023-06-06T00:00:00Z'
+          date: this.getDate()
         };    
       UserControllerApiFactory().postTransactions(transaction);
     }
