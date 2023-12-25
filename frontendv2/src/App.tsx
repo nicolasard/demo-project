@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import Login from './modules/Login';
+import AddPayment from './modules/AddPayment';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
           <Navbar/>
           <Routes>
               <Route path="/myAccount"  element={<MyAccount/>}/>
+              <Route path="/expense/:type/:expenseId?"  element={<AddPayment expenseId='' type='new'/>}/>
               <Route path="/"  element={<Home/>}/>
           </Routes>
         </div>
