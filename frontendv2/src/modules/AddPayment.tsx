@@ -29,6 +29,7 @@ const AddPayment = () => {
     // Set your JWT token in the headers
     const jwtToken = cookies.get('jwt-token'); // Replace with your actual JWT token
     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+    axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
 
     const transaction = {
       description: formData.description,
@@ -69,6 +70,7 @@ const AddPayment = () => {
     // Set your JWT token in the headers
     const jwtToken = cookies.get('jwt-token'); // Replace with your actual JWT token
     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+    axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
 
     const transaction = {
       id: formData.transactionId!,

@@ -145,7 +145,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         deleteTransactions: async (transaction: Transaction, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'transaction' is not null or undefined
             assertParamExists('deleteTransactions', 'transaction', transaction)
-            const localVarPath = `/transactions`;
+            const localVarPath = `/api/transactions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -177,7 +177,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
          * @throws {RequiredError}
          */
         getProfile: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/getProfile`;
+            const localVarPath = `/api/getProfile`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -209,7 +209,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         getTransaction: async (transactionId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'transactionId' is not null or undefined
             assertParamExists('getTransaction', 'transactionId', transactionId)
-            const localVarPath = `/transactions/{transactionId}`
+            const localVarPath = `/api/transactions/{transactionId}`
                 .replace(`{${"transactionId"}}`, encodeURIComponent(String(transactionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -239,7 +239,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
          * @throws {RequiredError}
          */
         getTransactionsPage: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/transactions`;
+            const localVarPath = `/api/transactions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -271,7 +271,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         postTransactions: async (transaction: Transaction, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'transaction' is not null or undefined
             assertParamExists('postTransactions', 'transaction', transaction)
-            const localVarPath = `/transactions`;
+            const localVarPath = `/api/transactions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -306,7 +306,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         putTransactions: async (transaction: Transaction, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'transaction' is not null or undefined
             assertParamExists('putTransactions', 'transaction', transaction)
-            const localVarPath = `/transactions`;
+            const localVarPath = `/api/transactions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

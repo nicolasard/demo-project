@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 import java.security.Principal;
 
 @RestController
+@RequestMapping("api")
 public class UserController {
 
     private final TransactionService transactionService;

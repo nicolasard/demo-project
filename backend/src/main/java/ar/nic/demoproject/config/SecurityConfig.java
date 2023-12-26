@@ -3,14 +3,10 @@ package ar.nic.demoproject.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.server.ServerWebExchange;
 
 @Configuration(proxyBeanMethods = false)
 @EnableWebFluxSecurity
@@ -21,7 +17,7 @@ public class SecurityConfig {
 
         http.csrf().disable()
                 .cors().configurationSource(request -> createCorsConfigSource())
-                .and().authorizeExchange().pathMatchers("/actuator/**",
+                .and().authorizeExchange().pathMatchers("/*","/static/**","/actuator/**",
                         "/webjars/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",

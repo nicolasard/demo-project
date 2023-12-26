@@ -17,11 +17,11 @@ class MyAccount extends React.Component<any,{ name: string|null, email: string|n
 
   getProfileFromWS(){
     const cookies = new Cookies();
-    cookies.set('mycookie','valor',{ path: '/' });
     console.log(cookies.get("jwt-token"));
     // Set your JWT token in the headers
     const jwtToken = cookies.get("jwt-token"); // Replace with your actual JWT token
     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+    axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
 
     UserControllerApiFactory().getProfile().then((response)=>{
       if (response.status==200){

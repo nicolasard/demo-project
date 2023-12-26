@@ -7,12 +7,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080",
+      "url": "http://localhost:3000",
       "description": "Generated server url"
     }
   ],
   "paths": {
-    "/transactions": {
+    "/api/transactions": {
       "get": {
         "tags": [
           "user-controller"
@@ -152,7 +152,7 @@
         }
       }
     },
-    "/transactions/{transactionId}": {
+    "/api/transactions/{transactionId}": {
       "get": {
         "tags": [
           "user-controller"
@@ -193,7 +193,7 @@
         }
       }
     },
-    "/getProfile": {
+    "/api/getProfile": {
       "get": {
         "tags": [
           "user-controller"

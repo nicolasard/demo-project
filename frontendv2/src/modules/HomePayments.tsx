@@ -18,11 +18,11 @@ const HomePayments = () => {
     try {
       console.log('Getting transactions...');
       const cookies = new Cookies();
-      cookies.set('mycookie', 'valor', { path: '/' });
       console.log(cookies.get('jwt-token'));
 
       const jwtToken = cookies.get('jwt-token');
       axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
 
       const response = await UserControllerApiFactory().getTransactionsPage();
       if (response.status === 200) {
@@ -46,6 +46,7 @@ const HomePayments = () => {
 
       const jwtToken = cookies.get('jwt-token');
       axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
 
       await UserControllerApiFactory().deleteTransactions(transaction);
       getTransactions();
