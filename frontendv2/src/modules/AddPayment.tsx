@@ -11,9 +11,10 @@ const AddPayment = () => {
 
   const params= useParams()
 
-  const [formData, setFormData] = useState<{ description: string | undefined; amount: number | null }>({
+  const [formData, setFormData] = useState<{ description: string | undefined; amount: number | null , transactionId: number | null}>({
     description: undefined,
     amount: null,
+    transactionId: null
   });
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const AddPayment = () => {
     };
 
     UserControllerApiFactory().getTransaction(expenseId).then( (response) => {
-      setFormData({ description: response.data.description,amount: response.data.amount });
+      setFormData({ description: response.data.description,amount: response.data.amount , transactionId : response.data.id!});
     });
     
   }
@@ -70,19 +71,25 @@ const AddPayment = () => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
 
     const transaction = {
+      id: formData.transactionId!,
       description: formData.description,
       amount: formData.amount!,
       currency: 'ARS',
       date: getDate(),
     };
 
-    UserControllerApiFactory().postTransactions(transaction).then((response) => {
-      navigate('/');
-    });
+    if (params.type==="edit"){
+      UserControllerApiFactory().putTransactions(transaction).then((response) => {
+        navigate('/');
+      });  
+    }
+    if (params.type==="new"){
+      UserControllerApiFactory().postTransactions(transaction).then((response) => {
+        navigate('/');
+      });
+  
+    }
   };
-
-
-
   
   return (
     <div id="content">
