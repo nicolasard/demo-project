@@ -27,7 +27,7 @@ function App() {
           <Navbar/>
           <Routes>
               <Route path="/myAccount"  element={<MyAccount/>}/>
-              <Route path="/expense/:type/:expenseId?"  element={<AddPayment expenseId='' type='new'/>}/>
+              <Route path="/expense/:type/:expenseId?"  element={<AddPayment/>}/>
               <Route path="/"  element={<Home/>}/>
           </Routes>
         </div>

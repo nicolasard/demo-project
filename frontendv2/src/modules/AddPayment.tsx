@@ -1,93 +1,94 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import { UserControllerApiFactory, Transaction } from './generated-api/api';
-import { useParams, useNavigate, redirect } from 'react-router-dom'
+import { UserControllerApiFactory } from './generated-api/api';
+import { useParams, useNavigate } from 'react-router-dom';
 
+const AddPayment = () => {
 
-class AddPayment extends React.Component<{type: string, expenseId: string|undefined},{description : string|undefined, amount: number|null}>{
-  
-    constructor(props: {type: string, expenseId: string|undefined}) {
-        super(props);
-        this.state = {
-            description: undefined,
-            amount: null
-          };
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        
-    }
+  //Hooks area 
+  const navigate = useNavigate();
 
-    handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-      const { id, value } = event.target;
-      if (id === 'description'){
-          this.setState({description: value});
-      }
+  const params= useParams()
 
-      if (id === 'amount'){
-          this.setState({amount: parseFloat(value)});
-      }
-    }
-      
-    handleSubmit(event:  React.FormEvent<HTMLFormElement>) {
-        console.log("Saving transaction",this.state);
-        this.saveToWs();
-        event.preventDefault();
-      }
+  const [formData, setFormData] = useState<{ description: string | undefined; amount: number | null }>({
+    description: undefined,
+    amount: null,
+  });
 
-    getDate(){
-      const date = Date.now();
-      const date2 = new Date(date);
-      return date2.toISOString();
-    }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: id === 'amount' ? parseFloat(value) : value,
+    }));
+  };
 
-    saveToWs(){
-      
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('Saving transaction', formData);
+    saveToWs();
+    event.preventDefault();
+  };
 
-      const cookies = new Cookies();
-      cookies.set('mycookie','valor',{ path: '/' });
-      console.log(cookies.get("jwt-token"));
-      // Set your JWT token in the headers
-      const jwtToken = cookies.get("jwt-token"); // Replace with your actual JWT token
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+  const getDate = () => {
+    const date = Date.now();
+    const date2 = new Date(date);
+    return date2.toISOString();
+  };
 
-      const transaction = {
-          description: this.state.description,
-          amount: this.state.amount!,
-          currency: 'ARS',
-          date: this.getDate()
-        };    
-      UserControllerApiFactory().postTransactions(transaction).then(
-        (response)=> {
-          const navigate = useNavigate();
-          navigate("/");
-        }
-      );
-    }
-      
-render() {
+  const saveToWs = () => {
+    const cookies = new Cookies();
+    cookies.set('mycookie', 'valor', { path: '/' });
+    console.log(cookies.get('jwt-token'));
+    // Set your JWT token in the headers
+    const jwtToken = cookies.get('jwt-token'); // Replace with your actual JWT token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+
+    const transaction = {
+      description: formData.description,
+      amount: formData.amount!,
+      currency: 'ARS',
+      date: getDate(),
+    };
+
+    UserControllerApiFactory().postTransactions(transaction).then((response) => {
+      navigate('/');
+    });
+  };
+
   return (
-<div id='content'>
-    <h4>Add Expense</h4>
-    <form className="row g-3" onSubmit={this.handleSubmit}>
-    <div className="mb-3 row">
-    <label htmlFor="description" className="col-sm-2 col-form-label">Description</label>
-    <div className="col-sm-10">
-      <input type="text" className="form-control" id="description" onChange={this.handleChange}/>
+    <div id="content">
+      {params.type === "edit" && 
+        <h4>Edit Expense</h4>
+      }
+      {params.type === "new" && 
+        <h4>Add Expense</h4>
+      }
+      <form className="row g-3" onSubmit={handleSubmit}>
+        <div className="mb-3 row">
+          <label htmlFor="description" className="col-sm-2 col-form-label">
+            Description
+          </label>
+          <div className="col-sm-10">
+            <input type="text" className="form-control" id="description" onChange={handleChange} />
+          </div>
+        </div>
+        <div className="mb-3 row">
+          <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
+            Amount
+          </label>
+          <div className="col-sm-10">
+            <input type="text" className="form-control" id="amount" onChange={handleChange} />
+          </div>
+        </div>
+        <div className="mb-3 row">
+          <button type="submit" className="btn btn-primary mb-3">
+            Save
+          </button>
+        </div>
+      </form>
     </div>
-  </div>
-  <div className="mb-3 row">
-    <label htmlFor="inputPassword" className="col-sm-2 col-form-label">Amount</label>
-    <div className="col-sm-10">
-      <input type="text" className="form-control" id="amount" onChange={this.handleChange}/>
-    </div>
-  </div>
-    <div className="mb-3 row">
-        <button type="submit" className="btn btn-primary mb-3">Save</button>
-    </div>
-    </form>
-</div>
   );
-}
-}
+};
+
 export default AddPayment;
