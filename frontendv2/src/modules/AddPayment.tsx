@@ -99,6 +99,7 @@ const AddPayment = () => {
       {params.type === "new" && 
         <h4>Add Expense</h4>
       }
+      <div style={{ paddingTop: 30}}>
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="mb-3 row">
           <label htmlFor="description" className="col-sm-2 col-form-label">
@@ -122,6 +123,7 @@ const AddPayment = () => {
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 };
