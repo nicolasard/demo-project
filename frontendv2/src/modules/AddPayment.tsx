@@ -16,6 +16,32 @@ const AddPayment = () => {
     amount: null,
   });
 
+  useEffect(() => {
+    if (params.type === "edit"){
+      getExpenseData(Number(params.expenseId))
+    }
+  }, []);
+
+  const getExpenseData = (expenseId: number) => {
+    const cookies = new Cookies();
+    console.log(cookies.get('jwt-token'));
+    // Set your JWT token in the headers
+    const jwtToken = cookies.get('jwt-token'); // Replace with your actual JWT token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+
+    const transaction = {
+      description: formData.description,
+      amount: formData.amount!,
+      currency: 'ARS',
+      date: getDate(),
+    };
+
+    UserControllerApiFactory().getTransaction(expenseId).then( (response) => {
+      setFormData({ description: response.data.description,amount: response.data.amount });
+    });
+    
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
     setFormData((prevData) => ({
@@ -38,7 +64,6 @@ const AddPayment = () => {
 
   const saveToWs = () => {
     const cookies = new Cookies();
-    cookies.set('mycookie', 'valor', { path: '/' });
     console.log(cookies.get('jwt-token'));
     // Set your JWT token in the headers
     const jwtToken = cookies.get('jwt-token'); // Replace with your actual JWT token
@@ -56,6 +81,9 @@ const AddPayment = () => {
     });
   };
 
+
+
+  
   return (
     <div id="content">
       {params.type === "edit" && 
@@ -70,7 +98,7 @@ const AddPayment = () => {
             Description
           </label>
           <div className="col-sm-10">
-            <input type="text" className="form-control" id="description" onChange={handleChange} />
+            <input type="text" className="form-control" id="description" value={formData.description} onChange={handleChange} />
           </div>
         </div>
         <div className="mb-3 row">
@@ -78,7 +106,7 @@ const AddPayment = () => {
             Amount
           </label>
           <div className="col-sm-10">
-            <input type="text" className="form-control" id="amount" onChange={handleChange} />
+            <input type="number" step="0.01" className="form-control" id="amount" value={formData.amount!} onChange={handleChange} />
           </div>
         </div>
         <div className="mb-3 row">

@@ -22,6 +22,10 @@ public class TransactionService
         return this.transactionRepository.findAllByUserInternalId(Mono.just(principal.getInternalId()));
     }
 
+    public Mono<Transaction> getTransactions(final UserProfile principal, final Long transactionId){
+        return this.transactionRepository.findByUserInternalIdAndTransactionId(Mono.just(principal.getInternalId()),transactionId);
+    }
+
     public Mono<Transaction> saveTransaction(final Mono<Transaction> transaction, final UserProfile principal){
         return transaction.map(t->{t.setUserInternalId(principal.getInternalId()); return t;}).flatMap(transactionRepository::save);
     }

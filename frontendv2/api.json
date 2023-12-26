@@ -17,7 +17,7 @@
         "tags": [
           "user-controller"
         ],
-        "operationId": "getTransactions",
+        "operationId": "getTransactionsPage",
         "responses": {
           "400": {
             "description": "Bad Request",
@@ -148,6 +148,47 @@
           },
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/transactions/{transactionId}": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getTransaction",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
           }
         }
       }

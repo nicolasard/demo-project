@@ -24,7 +24,7 @@ const HomePayments = () => {
       const jwtToken = cookies.get('jwt-token');
       axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
 
-      const response = await UserControllerApiFactory().getTransactions();
+      const response = await UserControllerApiFactory().getTransactionsPage();
       if (response.status === 200) {
         console.log(response.data);
         setTransactions(response.data);

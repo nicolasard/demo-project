@@ -32,8 +32,13 @@ public class UserController {
     }
 
     @GetMapping("/transactions")
-    Flux<Transaction> getTransactions(Principal principal) {
+    Flux<Transaction> getTransactionsPage(Principal principal) {
         return principalMapper.getUserProfile(principal).map(transactionService::getTransactions).flatMapMany(f->f);
+    }
+
+    @GetMapping("/transactions/{transactionId}")
+    Mono<Transaction> getTransaction(Principal principal, @PathVariable("transactionId") Long transactionId) {
+        return principalMapper.getUserProfile(principal).map(t -> transactionService.getTransactions(t,transactionId)).flatMap(f->f);
     }
 
     @PostMapping("/transactions")

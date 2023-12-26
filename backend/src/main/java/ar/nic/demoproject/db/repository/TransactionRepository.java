@@ -13,5 +13,8 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
 
     @Query("select * from transactions t where t.userInternalId = :userInternalId")
     Flux<Transaction> findAllByUserInternalId(Mono<Integer> userInternalId);
+
+    @Query("select * from transactions t where t.userInternalId = :userInternalId and t.transactionId = :transactionId")
+    Mono<Transaction> findByUserInternalIdAndTransactionId(Mono<Integer> userInternalId, Long transactionId);
 }
 
