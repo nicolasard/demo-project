@@ -12,10 +12,10 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface TransactionRepository extends ReactiveCrudRepository<Transaction, Long> {
 
-    @Query("select * from transactions t where t.userInternalId = :userInternalId")
+    @Query("select * from transactions t where t.userInternalId = :userInternalId ORDER BY t.date DESC")
     Flux<Transaction> findAllByUserInternalId(Mono<Integer> userInternalId);
 
-    @Query("select * from transactions t where t.userInternalId = :userInternalId and t.transactionId = :transactionId ORDER BY t.date DESC")
+    @Query("select * from transactions t where t.userInternalId = :userInternalId and t.transactionId = :transactionId")
     Mono<Transaction> findByUserInternalIdAndTransactionId(Mono<Integer> userInternalId, Long transactionId);
 
     @Query("select DAY(t.`date`) as day ,sum(amount) as total \n" +
