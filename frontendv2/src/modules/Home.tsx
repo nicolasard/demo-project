@@ -19,7 +19,7 @@ function Home() {
 </svg> <FormattedMessage id = "app.header_add_expense"/></button>
         </div>
         <div className="col-sm-2">
-          <p style={{fontSize:'larger'}}>??Month?? total: <b>$??.-</b></p>
+         
         </div>
       </div>
     </div>

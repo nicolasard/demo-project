@@ -68,7 +68,7 @@ const HomePayments = () => {
 
   return (
     <div>
-      <table className="table">
+      <table className="table-responsive">
         <thead>
           <tr>
             <th className="col"><FormattedMessage id = "app.date"/></th>
