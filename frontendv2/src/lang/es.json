@@ -1,0 +1,6 @@
+{
+    "app.header_expenses" : "Gastos",
+    "app.header_account" : "Mi cuenta",
+    "app.header_add_expense" : "Agregar Gasto",
+    "app.header_edit_expense" : "Editar Gasto"
+}

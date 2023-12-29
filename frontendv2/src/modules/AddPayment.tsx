@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { UserControllerApiFactory } from './generated-api/api';
 import { useParams, useNavigate } from 'react-router-dom';
+import {FormattedMessage} from 'react-intl';
 
 const AddPayment = () => {
 
@@ -97,10 +98,10 @@ const AddPayment = () => {
   return (
     <div id="content">
       {params.type === "edit" && 
-        <h4>Edit Expense</h4>
+        <h4><FormattedMessage id = "app.header_edit_expense"/></h4>
       }
       {params.type === "new" && 
-        <h4>Add Expense</h4>
+        <h4><FormattedMessage id = "app.header_add_expense"/></h4>
       }
       <div style={{ paddingTop: 30}}>
       <form className="row g-3" onSubmit={handleSubmit}>

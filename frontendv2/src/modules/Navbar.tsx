@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import Cookies from 'universal-cookie';
+import {FormattedMessage} from 'react-intl';
 
 function Navbar() {
 
@@ -22,10 +23,10 @@ function Navbar() {
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav me-auto mb-2 mb-lg-0">
         <li className="nav-item">
-          <a className="nav-link" href="#" aria-current="page" onClick={()=>navigate('/')}>Expenses</a>
+          <a className="nav-link" href="#" aria-current="page" onClick={()=>navigate('/')}><FormattedMessage id = "app.header_expenses"/></a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="#" onClick={()=>navigate('/myAccount')}>Account</a>
+          <a className="nav-link" href="#" onClick={()=>navigate('/myAccount')}><FormattedMessage id = "app.header_account"/></a>
         </li>
       </ul>
       <ul className="navbar-nav">
