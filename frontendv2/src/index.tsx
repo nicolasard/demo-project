@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import English from './lang/en.json';
 import Spanish from './lang/es.json';
-import Deutch from './lang/de.json';
+import Deutsche from './lang/de.json';
 import {IntlProvider} from 'react-intl';
 
 const root = ReactDOM.createRoot(
@@ -18,7 +18,7 @@ const locale = navigator.language;
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId="129539746772-fjto05brsno322451sr2djv2oeus4jb8.apps.googleusercontent.com">
-        <IntlProvider locale ={locale} messages={Deutch}>
+        <IntlProvider locale ={locale} messages={Deutsche}>
       <App />
         </IntlProvider>
     </GoogleOAuthProvider>
