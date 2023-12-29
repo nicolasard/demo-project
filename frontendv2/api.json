@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
+      "url": "http://localhost:8900",
       "description": "Generated server url"
     }
   ],
@@ -193,6 +193,59 @@
         }
       }
     },
+    "/api/transactions/monthly-report/{year}/{month}": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getTransactionsReport",
+        "parameters": [
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TotalDay"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/getProfile": {
       "get": {
         "tags": [
@@ -285,6 +338,21 @@
           }
         },
         "description": "Transactions made."
+      },
+      "TotalDay": {
+        "title": "TotalDay",
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "description": "The total amount of transactions in a day"
       },
       "UserProfile": {
         "title": "User",

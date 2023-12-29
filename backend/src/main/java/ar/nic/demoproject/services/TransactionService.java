@@ -1,5 +1,6 @@
 package ar.nic.demoproject.services;
 
+import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
 import ar.nic.demoproject.db.repository.TransactionRepository;
@@ -32,5 +33,9 @@ public class TransactionService
 
     public Mono<Void> deleteTransaction(final Mono<Transaction> transaction, final UserProfile principal){
         return transaction.map(t->{t.setUserInternalId(principal.getInternalId()); return t;}).flatMap(transactionRepository::delete);
+    }
+
+    public Flux<TotalDay> getTotalPerDay(final UserProfile principal, final int month, final int year){
+        return this.transactionRepository.findTotalPerDay(principal.getInternalId(),month,year);
     }
 }

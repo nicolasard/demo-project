@@ -1,5 +1,6 @@
 package ar.nic.demoproject.db.repository;
 
+import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
 import org.springframework.data.r2dbc.repository.Query;
@@ -14,7 +15,12 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
     @Query("select * from transactions t where t.userInternalId = :userInternalId")
     Flux<Transaction> findAllByUserInternalId(Mono<Integer> userInternalId);
 
-    @Query("select * from transactions t where t.userInternalId = :userInternalId and t.transactionId = :transactionId")
+    @Query("select * from transactions t where t.userInternalId = :userInternalId and t.transactionId = :transactionId ORDER BY t.date DESC")
     Mono<Transaction> findByUserInternalIdAndTransactionId(Mono<Integer> userInternalId, Long transactionId);
+
+    @Query("select DAY(t.`date`) as day ,sum(amount) as total \n" +
+            "from transactions t where userInternalId = :userInternalId and MONTH(t.`date`)=:month and YEAR(t.`date`)=:year " +
+            "GROUP by DAY(t.`date`) order by DAY(t.`date`) asc ")
+    Flux<TotalDay> findTotalPerDay(Integer userInternalId, int month, int year);
 }
 

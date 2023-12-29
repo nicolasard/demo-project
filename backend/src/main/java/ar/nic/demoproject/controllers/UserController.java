@@ -1,5 +1,6 @@
 package ar.nic.demoproject.controllers;
 
+import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
 import ar.nic.demoproject.services.TransactionService;
@@ -57,4 +58,8 @@ public class UserController {
         return principalMapper.getUserProfile(principal).map(t->transactionService.deleteTransaction(transaction,t)).flatMap(f->f);
     }
 
+    @GetMapping("/transactions/monthly-report/{year}/{month}")
+    Flux<TotalDay> getTransactionsReport(Principal principal, @PathVariable("month") Integer month, @PathVariable("year") Integer year) {
+        return principalMapper.getUserProfile(principal).map(t->transactionService.getTotalPerDay(t,month,year)).flatMapMany(f->f);
+    }
 }

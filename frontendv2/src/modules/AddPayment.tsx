@@ -11,10 +11,11 @@ const AddPayment = () => {
 
   const params= useParams()
 
-  const [formData, setFormData] = useState<{ description: string | undefined; amount: number | null , transactionId: number | null}>({
+  const [formData, setFormData] = useState<{ description: string | undefined; amount: number | null , transactionId: number | null, date: Date | null}>({
     description: undefined,
     amount: null,
-    transactionId: null
+    transactionId: null,
+    date: new Date(Date.now())
   });
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const AddPayment = () => {
     };
 
     UserControllerApiFactory().getTransaction(expenseId).then( (response) => {
-      setFormData({ description: response.data.description,amount: response.data.amount , transactionId : response.data.id!});
+      setFormData({ description: response.data.description,amount: response.data.amount , transactionId : response.data.id!,date: new Date(response.data.date)});
     });
     
   }
@@ -77,7 +78,7 @@ const AddPayment = () => {
       description: formData.description,
       amount: formData.amount!,
       currency: 'ARS',
-      date: getDate(),
+      date: (new Date(formData.date!)).toISOString()!,
     };
 
     if (params.type==="edit"){
@@ -117,6 +118,14 @@ const AddPayment = () => {
           </label>
           <div className="col-sm-10">
             <input type="number" step="0.01" className="form-control" id="amount" value={formData.amount!} onChange={handleChange} />
+          </div>
+        </div>
+        <div className="mb-3 row">
+          <label htmlFor="inputDate" className="col-sm-2 col-form-label">
+            Date
+          </label>
+          <div className="col-sm-10">
+            <input type="date" className="form-control" id="date"  value={formData.date?.toISOString().split('T')[0]!} onChange={handleChange} />
           </div>
         </div>
         <div className="mb-3 row">

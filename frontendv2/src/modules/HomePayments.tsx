@@ -84,7 +84,7 @@ const HomePayments = () => {
               <td>{transaction.description}</td>
               <td>Cash</td>
               <td>
-                {transaction.amount} {transaction.currency}
+                {transaction.amount} Є
               </td>
               <td>
                 <button type="button" className="btn btn-primary ms-1 " onClick={() => goEdit(transaction)}>
