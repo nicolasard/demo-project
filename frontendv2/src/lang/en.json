@@ -2,5 +2,8 @@
     "app.header_expenses" : "Expenses",
     "app.header_account" : "My account",
     "app.header_add_expense" : "Add Expense",
-    "app.header_edit_expense" : "Edit Expense"
+    "app.header_edit_expense" : "Edit Expense",
+    "app.date" : "Date",
+    "app.description" : "Description",
+    "app.amount" : "Amount"
 }

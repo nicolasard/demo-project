@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom"
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
+
 
 function MonthlyStats() {
 
@@ -10,6 +12,11 @@ function MonthlyStats() {
     useEffect(() => {
         loadReport();
     }, []);
+
+    const [days, setDays] = useState<string[]>([]);
+
+    const [amount, setAmount] = useState<string[]>([]);
+
 
     const loadReport = async () => {
         const month = new Date(Date.now()).getMonth()+1;
@@ -25,6 +32,14 @@ function MonthlyStats() {
     
          UserControllerApiFactory().getTransactionsReport(month,year).then( 
             (response)=>{
+                var day:string[] = [];
+                var amount:string[] = [];
+                response.data.forEach(t=> { 
+                  day.push(t.day!.toString());
+                  amount.push(t.total!.toString());
+                });
+                setAmount(amount);
+                setDays(day);
                 console.log(response.data);
             }
          );
@@ -34,10 +49,28 @@ function MonthlyStats() {
           // Handle errors or trigger an event to show errors
         }
       };
+
     
   return (
     <div>
-        {(new Date(Date.now()).getMonth())}
+        <div  style={{height:'600'}}>
+        <Line
+  datasetIdKey='id'
+  options={{
+    maintainAspectRatio: false,
+  }}
+  data={{
+    labels: days,
+    datasets: [
+      {
+        data: amount,
+        borderColor: '#0d6efd',
+        backgroundColor: '#0d6efd'
+      }
+    ],
+  }}/>
+        </div>
+        
     </div>
   );
 }

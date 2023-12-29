@@ -107,7 +107,7 @@ const AddPayment = () => {
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="mb-3 row">
           <label htmlFor="description" className="col-sm-2 col-form-label">
-            Description
+          <FormattedMessage id = "app.description"/>
           </label>
           <div className="col-sm-10">
             <input type="text" className="form-control" id="description" value={formData.description} onChange={handleChange} />
@@ -115,7 +115,7 @@ const AddPayment = () => {
         </div>
         <div className="mb-3 row">
           <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-            Amount
+          <FormattedMessage id = "app.amount"/>
           </label>
           <div className="col-sm-10">
             <input type="number" step="0.01" className="form-control" id="amount" value={formData.amount!} onChange={handleChange} />
@@ -123,7 +123,7 @@ const AddPayment = () => {
         </div>
         <div className="mb-3 row">
           <label htmlFor="inputDate" className="col-sm-2 col-form-label">
-            Date
+          <FormattedMessage id = "app.date"/>
           </label>
           <div className="col-sm-10">
             <input type="date" className="form-control" id="date"  value={formData.date?.toISOString().split('T')[0]!} onChange={handleChange} />

@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { useNavigate } from 'react-router-dom';
+import {FormattedMessage} from 'react-intl';
 
 const HomePayments = () => {
 
@@ -70,10 +71,10 @@ const HomePayments = () => {
       <table className="table">
         <thead>
           <tr>
-            <th className="col">Date</th>
-            <th className="col">Description</th>
+            <th className="col"><FormattedMessage id = "app.date"/></th>
+            <th className="col"><FormattedMessage id = "app.description"/></th>
             <th className="col">Pay. Method</th>
-            <th className="col">Amount</th>
+            <th className="col"><FormattedMessage id = "app.amount"/></th>
             <th className="col"></th>
           </tr>
         </thead>
