@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Servus Payments",
+  "short_name": "MyExpenses",
+  "name": "MyExpenses",
   "icons": [
     {
       "src": "favicon.ico",

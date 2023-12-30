@@ -19,35 +19,39 @@ function MonthlyStats() {
 
 
     const loadReport = async () => {
-        const month = new Date(Date.now()).getMonth()+1;
-        const year = new Date(Date.now()).getFullYear();
-        try {
-          console.log('Getting transactions...');
-          const cookies = new Cookies();
-          console.log(cookies.get('jwt-token'));
-    
-          const jwtToken = cookies.get('jwt-token');
-          axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-          axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-    
-         UserControllerApiFactory().getTransactionsReport(month,year).then( 
-            (response)=>{
-                var day:string[] = [];
-                var amount:string[] = [];
-                response.data.forEach(t=> { 
-                  day.push(t.day!.toString());
-                  amount.push(t.total!.toString());
-                });
-                setAmount(amount);
-                setDays(day);
-                console.log(response.data);
-            }
-         );
-         
-        } catch (error) {
-          //console.log(error.response.data);
-          // Handle errors or trigger an event to show errors
-        }
+      try {
+        const month = new Date().getMonth() + 1;
+        const year = new Date().getFullYear();
+  
+        console.log('Getting transactions...');
+        
+        const cookies = new Cookies();
+        const jwtToken = cookies.get('jwt-token');
+  
+        axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+        axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
+  
+        const response = await UserControllerApiFactory().getTransactionsReport(month, year);
+  
+        const totalDaysInMonth = new Date(year, month, 0).getDate();
+        const dayArray: string[] = Array.from({ length: totalDaysInMonth }, (_, index) => (index + 1).toString());
+  
+        const amountArray: string[] = Array(totalDaysInMonth).fill('0');
+        
+        response.data.forEach((t) => {
+          const dayIndex = dayArray.indexOf(t.day!.toString());
+          if (dayIndex !== -1) {
+            amountArray[dayIndex] = t.total!.toString();
+          }
+        });
+  
+        setAmount(amountArray);
+        setDays(dayArray);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+        // Handle errors or trigger an event to show errors
+      }
       };
 
     

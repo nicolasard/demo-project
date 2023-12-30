@@ -23,8 +23,8 @@ function Home() {
         </div>
       </div>
     </div>
-    <HomePayments/>
     <MonthlyStats/>
+    <HomePayments/>
 </div>
   );
 }
