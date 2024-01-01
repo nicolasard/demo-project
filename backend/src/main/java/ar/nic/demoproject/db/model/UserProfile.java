@@ -1,6 +1,7 @@
 package ar.nic.demoproject.db.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Schema(title = "User", description = "The user information in the system.")
@@ -20,6 +21,8 @@ public class UserProfile {
 
     private Integer internalId;
 
+    @Transient
+    private Currency defaultCurrency;
 
     public String getFullName() {
         return fullName;
@@ -43,5 +46,13 @@ public class UserProfile {
 
     public void setInternalId(Integer internalId) {
         this.internalId = internalId;
+    }
+
+    public Currency getDefaultCurrency() {
+        return defaultCurrency;
+    }
+
+    public void setDefaultCurrency(Currency defaultCurrency) {
+        this.defaultCurrency = defaultCurrency;
     }
 }

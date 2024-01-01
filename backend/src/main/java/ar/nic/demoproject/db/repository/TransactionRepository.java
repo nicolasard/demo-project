@@ -2,7 +2,6 @@ package ar.nic.demoproject.db.repository;
 
 import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
-import ar.nic.demoproject.db.model.UserProfile;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;

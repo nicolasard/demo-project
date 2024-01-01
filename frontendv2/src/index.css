@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #f8f9fa;
 }
 
 code {
@@ -23,4 +24,10 @@ iframe{
 
 #content{
   margin: 2cqmin;
+}
+
+.trans-list:hover{
+  border-color: #0d6efd !important;
+  border-left-width: 5px !important;
+  cursor: pointer !important;
 }

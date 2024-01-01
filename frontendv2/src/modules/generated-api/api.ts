@@ -24,6 +24,31 @@ import type { RequestArgs } from './base';
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
 /**
+ * The ISO 4217 currencies table.
+ * @export
+ * @interface Currency
+ */
+export interface Currency {
+    /**
+     * 
+     * @type {string}
+     * @memberof Currency
+     */
+    'currencyCode'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Currency
+     */
+    'currencyDescription'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Currency
+     */
+    'currencySymbol'?: string;
+}
+/**
  * 
  * @export
  * @interface ErrorResponse
@@ -147,6 +172,12 @@ export interface UserProfile {
      * @memberof UserProfile
      */
     'internalId'?: number;
+    /**
+     * 
+     * @type {Currency}
+     * @memberof UserProfile
+     */
+    'defaultCurrency'?: Currency;
 }
 
 /**

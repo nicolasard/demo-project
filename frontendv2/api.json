@@ -354,6 +354,22 @@
         },
         "description": "The total amount of transactions in a day"
       },
+      "Currency": {
+        "title": "Currency",
+        "type": "object",
+        "properties": {
+          "currencyCode": {
+            "type": "string"
+          },
+          "currencyDescription": {
+            "type": "string"
+          },
+          "currencySymbol": {
+            "type": "string"
+          }
+        },
+        "description": "The ISO 4217 currencies table."
+      },
       "UserProfile": {
         "title": "User",
         "type": "object",
@@ -369,6 +385,9 @@
           "internalId": {
             "type": "integer",
             "format": "int32"
+          },
+          "defaultCurrency": {
+            "$ref": "#/components/schemas/Currency"
           }
         },
         "description": "The user information in the system."

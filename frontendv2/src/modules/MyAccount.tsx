@@ -3,17 +3,18 @@ import { UserControllerApiFactory, UserProfile } from './generated-api/api';
 import axios from 'axios';
 import React from 'react';
 
-class MyAccount extends React.Component<any,{ name: string|null, email: string|null, userId: number|null }>{
+class MyAccount extends React.Component<any,{ userProfile: UserProfile|null }>{
   
   constructor(props: any) {
     super(props);
-    this.state = { name:null, email:null, userId:null };
+    this.state = { userProfile:null };
     this.getProfileFromWS = this.getProfileFromWS.bind(this);
   }
 
   componentDidMount(){
     this.getProfileFromWS();
   }
+  
 
   getProfileFromWS(){
     const cookies = new Cookies();
@@ -25,21 +26,20 @@ class MyAccount extends React.Component<any,{ name: string|null, email: string|n
 
     UserControllerApiFactory().getProfile().then((response)=>{
       if (response.status==200){
-        this.setState({ name: response.data.fullName!, email:response.data.email!, userId:response.data.internalId!});
+        this.setState({ userProfile: response.data});
       }
     }).catch( e => console.log(e.response.data)); //Here I'm catching the exceptions. Later this component should trigger an event to show the errors;
   }
 
   render() {
-    if(this.state.name===''){
+    if(this.state.userProfile===null){
       return(<div>Loading...</div>);
     }
     return (
       <div id='content'>
-          <h3>My account</h3>
-          <div>ID: { this.state.userId }</div>
-          <div>Your name: { this.state.name }</div>
-          <div>Your email: { this.state.email }</div>
+          <div>Your name: { this.state.userProfile.fullName }</div>
+          <div>Your email: { this.state.userProfile.email }</div>
+          <div>Currency: { this.state.userProfile.defaultCurrency?.currencyDescription} ({ this.state.userProfile.defaultCurrency?.currencySymbol}) </div>
       </div>
     );
   }

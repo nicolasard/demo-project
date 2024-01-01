@@ -48,9 +48,11 @@ const AddPayment = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
+
     setFormData((prevData) => ({
       ...prevData,
       [id]: id === 'amount' ? parseFloat(value) : value,
+      [id]: id === 'date' ? new Date(value) : value ,
     }));
   };
 

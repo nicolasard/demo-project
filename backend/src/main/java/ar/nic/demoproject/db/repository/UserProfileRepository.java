@@ -9,6 +9,6 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface UserProfileRepository  extends ReactiveCrudRepository<UserProfile, Long> {
 
-    @Query("select * from users t where t.email = :email")
+    @Query("select * from users t left join currency c on t.default_currency = c.currency_code where t.email = :email ")
     Mono<UserProfile> findByEmail(Mono<String> email);
 }

@@ -67,6 +67,7 @@ function MonthlyStats() {
     labels: days,
     datasets: [
       {
+        label: "This month",
         data: amount,
         borderColor: '#0d6efd',
         backgroundColor: '#0d6efd'
