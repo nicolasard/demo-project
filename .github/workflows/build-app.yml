@@ -1,11 +1,27 @@
-# Compile the Maven application.
-
 name: Build app
 
 on: [push]
 
 jobs:
-  build:
+  compile-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      CI: false  # Set process.env.CI to false
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up NPM
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+    - name: Install Dependencies
+      run: npm install --force  # We shouldn't use force. Is just because some conflicts in the libs that need to be solved.
+      working-directory: ./frontendv2
+    - name: Build with npm
+      run: npm run build 
+      working-directory: ./frontendv2
+  compile-backend:
     runs-on: ubuntu-latest
     permissions:
       contents: read
