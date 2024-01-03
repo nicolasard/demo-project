@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.ed9730a0.css",
-    "main.js": "/static/js/main.85d64c8b.js",
+    "main.js": "/static/js/main.abb0b852.js",
     "static/js/787.797cfc6e.chunk.js": "/static/js/787.797cfc6e.chunk.js",
     "static/media/nuremberg-background.avif": "/static/media/nuremberg-background.58125b39727f373c139c.avif",
     "index.html": "/index.html",
     "main.ed9730a0.css.map": "/static/css/main.ed9730a0.css.map",
-    "main.85d64c8b.js.map": "/static/js/main.85d64c8b.js.map",
+    "main.abb0b852.js.map": "/static/js/main.abb0b852.js.map",
     "787.797cfc6e.chunk.js.map": "/static/js/787.797cfc6e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ed9730a0.css",
-    "static/js/main.85d64c8b.js"
+    "static/js/main.abb0b852.js"
   ]
 }
