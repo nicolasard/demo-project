@@ -18,7 +18,7 @@ const locale = navigator.language;
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId="129539746772-fjto05brsno322451sr2djv2oeus4jb8.apps.googleusercontent.com">
-        <IntlProvider locale ={locale} messages={Deutsche}>
+        <IntlProvider locale='en' messages={English}>
       <App />
         </IntlProvider>
     </GoogleOAuthProvider>

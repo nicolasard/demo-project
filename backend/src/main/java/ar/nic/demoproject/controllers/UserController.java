@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @GetMapping("/transactions")
-    Flux<Transaction> getTransactionsPage(Principal principal) {
-        return principalMapper.getUserProfile(principal).map(transactionService::getTransactions).flatMapMany(f->f);
+    Flux<Transaction> getTransactionsPage(Principal principal, @RequestParam("month") Integer month, @RequestParam("year") Integer year) {
+        return principalMapper.getUserProfile(principal).map( t-> transactionService.getTransactions(t,month,year)).flatMapMany(f->f);
     }
 
     @GetMapping("/transactions/{transactionId}")

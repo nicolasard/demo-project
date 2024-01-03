@@ -136,6 +136,9 @@ const AddPayment = () => {
             Save
           </button>
         </div>
+        <button type="submit" className="btn btn-danger mb-3">
+            Delete
+          </button>
       </form>
     </div>
     </div>

@@ -3,13 +3,20 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { useNavigate } from 'react-router-dom';
-import {FormattedMessage} from 'react-intl';
+import { useIntl } from 'react-intl';
+
 
 const HomePayments = () => {
 
   const navigate = useNavigate();
 
+  const intl = useIntl();
+
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
+
+  const [year, setYear] = useState<number>(new Date().getFullYear());
 
   useEffect(() => {
     getTransactions();
@@ -25,7 +32,7 @@ const HomePayments = () => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
       axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
 
-      const response = await UserControllerApiFactory().getTransactionsPage();
+      const response = await UserControllerApiFactory().getTransactionsPage(month,year);
       if (response.status === 200) {
         console.log(response.data);
         setTransactions(response.data);
@@ -68,7 +75,7 @@ const HomePayments = () => {
 
   const formatDate = (date: string) => {
     const options:Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric' };
-    return new Date(date).toLocaleDateString('de',options);
+    return new Date(date).toLocaleDateString(intl.locale,options);
   };
 
   return (

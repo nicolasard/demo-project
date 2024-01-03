@@ -4,10 +4,15 @@ import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-
+import {FormattedMessage} from 'react-intl';
+import { useNavigate } from "react-router-dom"
+import { useIntl } from 'react-intl';
 
 function MonthlyStats() {
 
+  const navigate = useNavigate();
+
+  const intl = useIntl();
 
     useEffect(() => {
         loadReport();
@@ -22,29 +27,28 @@ function MonthlyStats() {
       try {
         const month = new Date().getMonth() + 1;
         const year = new Date().getFullYear();
-  
+    
         console.log('Getting transactions...');
-        
+    
         const cookies = new Cookies();
         const jwtToken = cookies.get('jwt-token');
-  
+    
         axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
         axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-  
+    
         const response = await UserControllerApiFactory().getTransactionsReport(month, year);
-  
+    
         const totalDaysInMonth = new Date(year, month, 0).getDate();
         const dayArray: string[] = Array.from({ length: totalDaysInMonth }, (_, index) => (index + 1).toString());
-  
-        const amountArray: string[] = Array(totalDaysInMonth).fill('0');
-        
-        response.data.forEach((t) => {
-          const dayIndex = dayArray.indexOf(t.day!.toString());
-          if (dayIndex !== -1) {
-            amountArray[dayIndex] = t.total!.toString();
-          }
+    
+        // Initialize amountArray with incremental sum
+        const amountArray: string[] = Array(totalDaysInMonth).fill('0').map((_, index) => {
+          const sum = response.data
+            .filter((t) => dayArray.indexOf(t.day!.toString()) <= index)
+            .reduce((acc, t) => acc + t.total!, 0);
+          return sum.toString();
         });
-  
+    
         setAmount(amountArray);
         setDays(dayArray);
         console.log(response.data);
@@ -52,11 +56,27 @@ function MonthlyStats() {
         console.error('Error fetching transactions:', error);
         // Handle errors or trigger an event to show errors
       }
-      };
-
+    };
     
   return (
     <div>
+
+<div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-2">
+        <button onClick={ () => navigate('/expense/new') } type="button" className="btn btn-primary" > <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-square-fill" viewBox="0 0 16 16">
+  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
+</svg> <FormattedMessage id = "app.header_add_expense"/></button>
+        </div>
+        <div className="col-sm-2">
+         <div style={{fontSize:32, fontWeight:4000 }}>{ new Date(Date.now()).toLocaleDateString(intl.locale, { month: 'long' })}</div>
+        </div>
+        <div className="col-sm-2">
+         <div style={{fontSize:32, fontWeight:4000 }}>{ amount[amount.length-1] } €</div>
+        </div>
+      </div>
+    </div>
+
         <div  style={{height:'600'}}>
         <Line
   datasetIdKey='id'

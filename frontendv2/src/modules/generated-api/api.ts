@@ -285,10 +285,16 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
+         * @param {number} month 
+         * @param {number} year 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTransactionsPage: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getTransactionsPage: async (month: number, year: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'month' is not null or undefined
+            assertParamExists('getTransactionsPage', 'month', month)
+            // verify required parameter 'year' is not null or undefined
+            assertParamExists('getTransactionsPage', 'year', year)
             const localVarPath = `/api/transactions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -300,6 +306,14 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (month !== undefined) {
+                localVarQueryParameter['month'] = month;
+            }
+
+            if (year !== undefined) {
+                localVarQueryParameter['year'] = year;
+            }
 
 
     
@@ -466,11 +480,13 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} month 
+         * @param {number} year 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTransactionsPage(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Transaction>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTransactionsPage(options);
+        async getTransactionsPage(month: number, year: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Transaction>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTransactionsPage(month, year, options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['UserControllerApi.getTransactionsPage']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
@@ -550,11 +566,13 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
+         * @param {number} month 
+         * @param {number} year 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTransactionsPage(options?: any): AxiosPromise<Array<Transaction>> {
-            return localVarFp.getTransactionsPage(options).then((request) => request(axios, basePath));
+        getTransactionsPage(month: number, year: number, options?: any): AxiosPromise<Array<Transaction>> {
+            return localVarFp.getTransactionsPage(month, year, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -628,12 +646,14 @@ export class UserControllerApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} month 
+     * @param {number} year 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserControllerApi
      */
-    public getTransactionsPage(options?: AxiosRequestConfig) {
-        return UserControllerApiFp(this.configuration).getTransactionsPage(options).then((request) => request(this.axios, this.basePath));
+    public getTransactionsPage(month: number, year: number, options?: AxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).getTransactionsPage(month, year, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

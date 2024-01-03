@@ -19,8 +19,8 @@ public class TransactionService
         this.transactionRepository = transactionRepository;
     }
 
-    public Flux<Transaction> getTransactions(final UserProfile principal){
-        return this.transactionRepository.findAllByUserInternalId(Mono.just(principal.getInternalId()));
+    public Flux<Transaction> getTransactions(final UserProfile principal, final int month, final int year){
+        return this.transactionRepository.findAllByUserInternalId(Mono.just(principal.getInternalId()),month,year);
     }
 
     public Mono<Transaction> getTransactions(final UserProfile principal, final Long transactionId){
