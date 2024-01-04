@@ -22,6 +22,7 @@ jobs:
       run: npm run build 
       working-directory: ./frontendv2
   compile-backend:
+    needs: compile-frontend
     runs-on: ubuntu-latest
     permissions:
       contents: read
