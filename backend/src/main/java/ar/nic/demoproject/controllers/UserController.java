@@ -28,6 +28,11 @@ public class UserController {
         this.principalMapper = principalMapper;
     }
 
+    @GetMapping("/authenticate")
+    Mono<String> authenticate(Principal principal) {
+        return principalMapper.authenticate();
+    }
+
     @GetMapping("/getProfile")
     Mono<UserProfile> getProfile(Principal principal) {
         return Mono.just(principal).flatMap(principalMapper::getUserProfile);

@@ -21,6 +21,7 @@ public class SecurityConfig {
                         "/webjars/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
+                        "/api/authenticate",
                         "/swagger-ui.html").permitAll()
                 .anyExchange().authenticated().and().oauth2ResourceServer().jwt();
         return http.build();
