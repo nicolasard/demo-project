@@ -1,5 +1,6 @@
 package ar.nic.demoproject.controllers;
 
+import ar.nic.demoproject.db.model.AuthenticationType;
 import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
@@ -30,7 +31,7 @@ public class UserController {
 
     @GetMapping("/authenticate")
     Mono<String> authenticate(Principal principal) {
-        return principalMapper.authenticate();
+        return principalMapper.authenticate(AuthenticationType.DEMO_ACCOUNT);
     }
 
     @GetMapping("/getProfile")
