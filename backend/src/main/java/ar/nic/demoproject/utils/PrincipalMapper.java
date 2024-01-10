@@ -1,18 +1,22 @@
 package ar.nic.demoproject.utils;
 
+import ar.nic.demoproject.db.model.AuthenticationType;
 import ar.nic.demoproject.db.model.Currency;
 import ar.nic.demoproject.db.model.UserProfile;
 import ar.nic.demoproject.db.repository.UserProfileRepository;
+import org.apache.commons.lang3.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.Jwts;
 
 import javax.crypto.SecretKey;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -22,6 +26,8 @@ import java.time.temporal.ChronoUnit;
 
 @Component
 public class PrincipalMapper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrincipalMapper.class);
 
     final UserProfileRepository userProfileRepository;
 
@@ -53,28 +59,28 @@ public class PrincipalMapper {
      * Create our own JWT token out of the GoogleAuth JWT token. In the future
      * we can do this out of the JWT token from Facebook, Apple auth, etc.
      */
-    public Mono<String> authenticate(){
-        //TODO: This is under construction.
-        //TODO: Don't load the keystore for each transaction.
-        Key key;
+    public Mono<String> authenticate(final AuthenticationType authenticationType){
+        Key privateKey;
         try {
             final KeyStore keystore = KeyStore.getInstance("JKS");
             try (FileInputStream fis = new FileInputStream(this.keyStorePath)) {
                 keystore.load(fis, this.keyStoreKey.toCharArray());
-                key = keystore.getKey(keystore.aliases().nextElement(),this.keyStoreKey.toCharArray());
+                final String alias = keystore.aliases().nextElement();
+                privateKey = keystore.getKey(alias,this.keyStoreKey.toCharArray());
             }
         } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException |
                  UnrecoverableKeyException e) {
             throw new RuntimeException(e);
         }
-        final SecretKey key2 = Jwts.SIG.HS256.key().build(); // TODO: I need to generate a keypair and save in the configuration
-                                                            // this is only for test
-        return Mono.just(Jwts.builder()
-                        .subject("Test") //TODO: In future use the id of user.
-                        .claim("email","nicolas.ard@gmail.com")
-                        .claim("name","Nicolas Ardison")
-                        .expiration(Date.from(Instant.now().plus(6, ChronoUnit.DAYS)))
-                        .signWith(key2)
-                        .compact());
+        if (AuthenticationType.DEMO_ACCOUNT == authenticationType) {
+            return Mono.just(Jwts.builder()
+                    .subject("999")
+                    .claim("email", "demo-account@myexpenses.egallo.com.ar")
+                    .claim("name", "John Doe")
+                    .expiration(Date.from(Instant.now().plus(6, ChronoUnit.DAYS)))
+                    .signWith(privateKey)
+                    .compact());
+        }
+        throw new NotImplementedException("Authentication type not implemented.");
     }
 }
