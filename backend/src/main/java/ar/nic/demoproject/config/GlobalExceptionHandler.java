@@ -1,7 +1,6 @@
 package ar.nic.demoproject.config;
 
 import ar.nic.demoproject.entity.ErrorResponse;
-import ar.nic.demoproject.utils.PrincipalMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

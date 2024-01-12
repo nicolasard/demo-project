@@ -70,9 +70,22 @@
             <version>2.1.0</version>
         </dependency>
         <dependency>
+            <!-- Used to create/validate JWT tokens. -->
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.12.3</version> <!-- Use the latest version available -->
+            <version>0.12.3</version>
+        </dependency>
+        <dependency>
+            <!-- Used to manipulate JWK strings/objects. -->
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.37.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>3.0.6</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

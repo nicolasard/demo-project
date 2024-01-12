@@ -1,47 +1,38 @@
-package ar.nic.demoproject.utils;
+package ar.nic.demoproject.services;
 
 import ar.nic.demoproject.db.model.AuthenticationType;
 import ar.nic.demoproject.db.model.Currency;
 import ar.nic.demoproject.db.model.UserProfile;
 import ar.nic.demoproject.db.repository.UserProfileRepository;
+import ar.nic.demoproject.utils.CustomJwtTokenUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.Jwts;
 
-import javax.crypto.SecretKey;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.*;
-import java.security.cert.CertificateException;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Component
-public class PrincipalMapper {
+public class PrincipalMapperService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PrincipalMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrincipalMapperService.class);
 
     final UserProfileRepository userProfileRepository;
 
-    final String keyStorePath;
-
-    final String keyStoreKey;
+    final CustomJwtTokenUtils jwtTokenUtils;
 
     @Autowired
-    public PrincipalMapper(final UserProfileRepository userProfileRepository,
-                           @Value("${jwt-token.keystore-path}") final String keyStorePath,
-                           @Value("${jwt-token.keystore-password}") final String keyStoreKey) {
+    public PrincipalMapperService(final UserProfileRepository userProfileRepository,
+                                  final CustomJwtTokenUtils jwtTokenUtils) {
         this.userProfileRepository = userProfileRepository;
-        this.keyStorePath = keyStorePath;
-        this.keyStoreKey = keyStoreKey;
+        this.jwtTokenUtils = jwtTokenUtils;
     }
 
     public Mono<UserProfile> getUserProfile(Principal principal){
@@ -60,18 +51,7 @@ public class PrincipalMapper {
      * we can do this out of the JWT token from Facebook, Apple auth, etc.
      */
     public Mono<String> authenticate(final AuthenticationType authenticationType){
-        Key privateKey;
-        try {
-            final KeyStore keystore = KeyStore.getInstance("JKS");
-            try (FileInputStream fis = new FileInputStream(this.keyStorePath)) {
-                keystore.load(fis, this.keyStoreKey.toCharArray());
-                final String alias = keystore.aliases().nextElement();
-                privateKey = keystore.getKey(alias,this.keyStoreKey.toCharArray());
-            }
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException |
-                 UnrecoverableKeyException e) {
-            throw new RuntimeException(e);
-        }
+        final Key privateKey = jwtTokenUtils.getPrivateKey();
         if (AuthenticationType.DEMO_ACCOUNT == authenticationType) {
             return Mono.just(Jwts.builder()
                     .subject("999")

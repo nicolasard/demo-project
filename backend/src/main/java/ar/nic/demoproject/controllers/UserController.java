@@ -5,7 +5,7 @@ import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
 import ar.nic.demoproject.services.TransactionService;
-import ar.nic.demoproject.utils.PrincipalMapper;
+import ar.nic.demoproject.services.PrincipalMapperService;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,10 @@ public class UserController {
 
     private final TransactionService transactionService;
 
-    private final PrincipalMapper principalMapper;
+    private final PrincipalMapperService principalMapper;
 
     @Autowired
-    public UserController(final TransactionService transactionService, PrincipalMapper principalMapper) {
+    public UserController(final TransactionService transactionService, PrincipalMapperService principalMapper) {
         this.transactionService = transactionService;
         this.principalMapper = principalMapper;
     }
