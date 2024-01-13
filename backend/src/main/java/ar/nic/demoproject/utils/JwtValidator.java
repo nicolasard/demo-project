@@ -1,6 +1,5 @@
 package ar.nic.demoproject.utils;
 
-import ar.nic.demoproject.services.PrincipalMapperService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 
 import java.security.Key;
@@ -31,10 +29,14 @@ public class JwtValidator {
 
     final String googleJWKKeysUri;
 
+    final String googleJWTAudience;
+
     Key publicKey;
 
-    public JwtValidator(@Value("${jwt-token.google.jwk-keys-uri}") final String googleJWKKeysUri) {
+    public JwtValidator(@Value("${jwt-token.google.jwk-keys-uri}") final String googleJWKKeysUri,
+                        @Value("${jwt-token.google.audience}") final String googleJWTAudience) {
         this.googleJWKKeysUri = googleJWKKeysUri;
+        this.googleJWTAudience = googleJWTAudience;
         this.webClient = WebClient.create();
     }
 
@@ -58,8 +60,9 @@ public class JwtValidator {
      * @param jwtToken
      */
     public void validateGoogleToken(final String jwtToken){
-        Jws<Claims> claimsJws = Jwts.parser()
+        final Jws<Claims> claimsJws = Jwts.parser()
                 .verifyWith((PublicKey) publicKey) // Set the public key for signature verification
+                .requireAudience(this.googleJWTAudience)
                 .build()
                 .parseSignedClaims(jwtToken);
     }
