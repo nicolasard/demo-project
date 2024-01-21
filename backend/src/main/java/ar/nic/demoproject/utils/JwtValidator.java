@@ -12,26 +12,33 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.jsonwebtoken.Jwts;
+import reactor.core.publisher.Mono;
 
 import java.security.Key;
 import java.security.PublicKey;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
 
 /**
- * Util to validate JWT tokens from different providers like google.
+ * Reactive services to validate JWT tokens from different providers like google.
  */
 @Component
 public class JwtValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtValidator.class);
 
-    final WebClient webClient;
+    private final WebClient webClient;
 
-    final String googleJWKKeysUri;
+    private final String googleJWKKeysUri;
 
-    final String googleJWTAudience;
+    private final String googleJWTAudience;
 
-    Key publicKey;
+    private Key publicKey;
+
+    private Date expirationTime;
 
     public JwtValidator(@Value("${jwt-token.google.jwk-keys-uri}") final String googleJWKKeysUri,
                         @Value("${jwt-token.google.audience}") final String googleJWTAudience) {
@@ -40,30 +47,79 @@ public class JwtValidator {
         this.webClient = WebClient.create();
     }
 
-    public void loadJWK(){
-        final String jsonString = webClient.get().uri(googleJWKKeysUri).retrieve().bodyToMono(String.class).block();
-        if(jsonString == null){
-          throw new RuntimeException("No JWK (Java Web Key) from the uri: "+googleJWKKeysUri);
-        }
+    public Mono<Void> loadJWK(){
+        final Mono<String> jsonString = webClient.get().uri(googleJWKKeysUri).retrieve().bodyToMono(String.class);
+        return jsonString.map(JwtValidator::getParse).map(JWKSet::getKeys).flatMap(this::getPublicKeys);
+    }
+
+    private static JWKSet getParse(String s) {
         try {
-            for (final JWK jwk : JWKSet.parse(jsonString).getKeys()){
-                LOGGER.info(jwk.getKeyType() +  " - " + jwk.getAlgorithm() + " - " + jwk.getKeyID());
-                publicKey = jwk.toRSAKey().toPublicKey();
-            }
-        } catch (ParseException | JOSEException e) {
-            throw new RuntimeException("Unable to parse JWK (Java Web Key) from the uri: "+googleJWKKeysUri,e);
+            return JWKSet.parse(s);
+        }catch (ParseException e){
+            //TODO: Investigate how to handle in a better way exceptions in react
+            throw new RuntimeException(e);
         }
+    }
+
+    private Mono<Void> getPublicKeys(List<JWK> keys) {
+        try{
+        for (final JWK jwk : keys){
+            LOGGER.info(jwk.getKeyType() +  " - " + jwk.getAlgorithm() + " - " + jwk.getKeyID());
+            publicKey = jwk.toRSAKey().toPublicKey();
+            expirationTime = jwk.toRSAKey().getExpirationTime();
+        }
+        }catch (final JOSEException e) {
+        //TODO: Investigate how to handle in a better way exceptions in react
+        throw new RuntimeException(e);
+    }
+        return Mono.empty();
     }
 
     /**
      * Validates a Google JWT token
      * @param jwtToken
      */
-    public void validateGoogleToken(final String jwtToken){
-        final Jws<Claims> claimsJws = Jwts.parser()
-                .verifyWith((PublicKey) publicKey) // Set the public key for signature verification
-                .requireAudience(this.googleJWTAudience)
-                .build()
-                .parseSignedClaims(jwtToken);
+    public Mono<JwtUser> validateGoogleToken(final String jwtToken){
+        final Date currentDate = new Date();
+        return Mono.defer(() -> {
+            if (publicKey == null || (expirationTime != null && currentDate.before(expirationTime))) {
+                return loadJWK().then(Mono.empty());
+            }
+            return Mono.just(publicKey);
+        }).flatMap(key -> {
+            Jws<Claims> claimsJws = Jwts.parser()
+                    .verifyWith((PublicKey) publicKey)
+                    .requireAudience(this.googleJWTAudience)
+                    .build()
+                    .parseSignedClaims(jwtToken);
+
+            JwtUser jwtUser = new JwtUser();
+            jwtUser.setFullName(claimsJws.getPayload().get("name", String.class));
+            jwtUser.setEmail(claimsJws.getPayload().get("email", String.class));
+            return Mono.just(jwtUser);
+        });
+    }
+
+    public static class JwtUser{
+
+        private String fullName;
+
+        private String email;
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
     }
 }
