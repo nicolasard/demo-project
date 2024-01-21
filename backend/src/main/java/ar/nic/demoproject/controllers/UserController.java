@@ -29,8 +29,8 @@ public class UserController {
         this.principalMapper = principalMapper;
     }
 
-    @GetMapping("/authenticate/{authenticationType}/{token}")
-    Mono<String> authenticate(Principal principal,@PathVariable("authenticationType") AuthenticationType authenticationType,@PathVariable("token") String token) {
+    @GetMapping("/authenticate")
+    Mono<String> authenticate(@RequestParam("authenticationType") AuthenticationType authenticationType,@RequestParam("token") String token) {
         return principalMapper.authenticate(authenticationType,token);
     }
 

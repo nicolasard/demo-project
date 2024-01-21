@@ -17,8 +17,6 @@ import reactor.core.publisher.Mono;
 import java.security.Key;
 import java.security.PublicKey;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -36,9 +34,7 @@ public class JwtValidator {
 
     private final String googleJWTAudience;
 
-    private Key publicKey;
-
-    private Date expirationTime;
+    private RsaKey rsaKey;
 
     public JwtValidator(@Value("${jwt-token.google.jwk-keys-uri}") final String googleJWKKeysUri,
                         @Value("${jwt-token.google.audience}") final String googleJWTAudience) {
@@ -47,7 +43,8 @@ public class JwtValidator {
         this.webClient = WebClient.create();
     }
 
-    public Mono<Void> loadJWK(){
+    public Mono<RsaKey> loadJWK(){
+        //TODO: Cache the key here, so we don't download the JWK from the internet everytime a user logs in.
         final Mono<String> jsonString = webClient.get().uri(googleJWKKeysUri).retrieve().bodyToMono(String.class);
         return jsonString.map(JwtValidator::getParse).map(JWKSet::getKeys).flatMap(this::getPublicKeys);
     }
@@ -61,18 +58,20 @@ public class JwtValidator {
         }
     }
 
-    private Mono<Void> getPublicKeys(List<JWK> keys) {
+    private Mono<RsaKey> getPublicKeys(List<JWK> keys) {
+        final RsaKey rsaK = new RsaKey();
         try{
         for (final JWK jwk : keys){
             LOGGER.info(jwk.getKeyType() +  " - " + jwk.getAlgorithm() + " - " + jwk.getKeyID());
-            publicKey = jwk.toRSAKey().toPublicKey();
-            expirationTime = jwk.toRSAKey().getExpirationTime();
+            rsaK.setPublicKey(jwk.toRSAKey().toPublicKey());
+            rsaK.setExpirationTime(jwk.toRSAKey().getExpirationTime());
         }
         }catch (final JOSEException e) {
         //TODO: Investigate how to handle in a better way exceptions in react
         throw new RuntimeException(e);
     }
-        return Mono.empty();
+        this.rsaKey = rsaK;
+        return Mono.just(rsaK);
     }
 
     /**
@@ -81,23 +80,50 @@ public class JwtValidator {
      */
     public Mono<JwtUser> validateGoogleToken(final String jwtToken){
         final Date currentDate = new Date();
-        return Mono.defer(() -> {
-            if (publicKey == null || (expirationTime != null && currentDate.before(expirationTime))) {
-                return loadJWK().then(Mono.empty());
-            }
-            return Mono.just(publicKey);
-        }).flatMap(key -> {
+        return loadJWK().flatMap(key -> {
             Jws<Claims> claimsJws = Jwts.parser()
-                    .verifyWith((PublicKey) publicKey)
+                    .verifyWith((PublicKey) key.getPublicKey())
                     .requireAudience(this.googleJWTAudience)
                     .build()
-                    .parseSignedClaims(jwtToken);
+                    .parseSignedClaims(jwtToken.trim());
 
             JwtUser jwtUser = new JwtUser();
             jwtUser.setFullName(claimsJws.getPayload().get("name", String.class));
             jwtUser.setEmail(claimsJws.getPayload().get("email", String.class));
             return Mono.just(jwtUser);
         });
+    }
+
+    public static class RsaKey {
+        private Key publicKey;
+
+        private Date expirationTime;
+
+        private String id;
+
+        public Key getPublicKey() {
+            return publicKey;
+        }
+
+        public void setPublicKey(Key publicKey) {
+            this.publicKey = publicKey;
+        }
+
+        public Date getExpirationTime() {
+            return expirationTime;
+        }
+
+        public void setExpirationTime(Date expirationTime) {
+            this.expirationTime = expirationTime;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
 
     public static class JwtUser{
