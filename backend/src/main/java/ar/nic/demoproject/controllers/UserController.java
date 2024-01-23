@@ -4,6 +4,7 @@ import ar.nic.demoproject.db.model.AuthenticationType;
 import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
+import ar.nic.demoproject.entity.AuthorizeRequest;
 import ar.nic.demoproject.services.TransactionService;
 import ar.nic.demoproject.services.PrincipalMapperService;
 
@@ -29,9 +30,9 @@ public class UserController {
         this.principalMapper = principalMapper;
     }
 
-    @GetMapping("/authenticate")
-    Mono<String> authenticate(@RequestParam("authenticationType") AuthenticationType authenticationType,@RequestParam("token") String token) {
-        return principalMapper.authenticate(authenticationType,token);
+    @PostMapping("/authenticate")
+    Mono<String> authenticate(@RequestBody AuthorizeRequest authorizeRequest) {
+        return principalMapper.authenticate(authorizeRequest.getAuthenticationType(),authorizeRequest.getToken());
     }
 
     @GetMapping("/getProfile")

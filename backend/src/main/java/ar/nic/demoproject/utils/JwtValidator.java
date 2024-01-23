@@ -65,6 +65,8 @@ public class JwtValidator {
             LOGGER.info(jwk.getKeyType() +  " - " + jwk.getAlgorithm() + " - " + jwk.getKeyID());
             rsaK.setPublicKey(jwk.toRSAKey().toPublicKey());
             rsaK.setExpirationTime(jwk.toRSAKey().getExpirationTime());
+            this.rsaKey = rsaK;
+            return Mono.just(rsaK);
         }
         }catch (final JOSEException e) {
         //TODO: Investigate how to handle in a better way exceptions in react

@@ -1,4 +1,5 @@
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
+import {  AuthorizeRequest, AuthorizeRequestAuthenticationTypeEnum, UserControllerApiFactory } from './generated-api/api';
 
 function Login() {
   
@@ -18,8 +19,17 @@ function Login() {
 }
 
 function onSuccess(credentialResponse: CredentialResponse){
-  document.cookie = 'jwt-token='+credentialResponse.credential;
-  window.location.reload();
+  var authorizeRequest:AuthorizeRequest = new Object();
+  authorizeRequest.authenticationType=AuthorizeRequestAuthenticationTypeEnum.GoogleAuth;
+  authorizeRequest.token=credentialResponse.credential;
+  UserControllerApiFactory().authenticate(authorizeRequest).then( (response)=>{
+    console.log(response);
+    document.cookie = 'jwt-token='+response.data;
+    window.location.reload();
+  }).catch((e)=>{
+    console.log('Exception calling '+e);
+  })
+  //
 }
 
 function onError(){

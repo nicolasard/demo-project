@@ -172,6 +172,46 @@
         }
       }
     },
+    "/api/authenticate": {
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "authenticate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorizeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/transactions/{transactionId}": {
       "get": {
         "tags": [
@@ -358,6 +398,21 @@
           }
         },
         "description": "Transactions made."
+      },
+      "AuthorizeRequest": {
+        "type": "object",
+        "properties": {
+          "authenticationType": {
+            "type": "string",
+            "enum": [
+              "GOOGLE_AUTH",
+              "DEMO_ACCOUNT"
+            ]
+          },
+          "token": {
+            "type": "string"
+          }
+        }
       },
       "TotalDay": {
         "title": "TotalDay",

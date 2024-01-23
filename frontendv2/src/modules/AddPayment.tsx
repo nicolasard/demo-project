@@ -62,6 +62,28 @@ const AddPayment = () => {
     event.preventDefault();
   };
 
+  const deletePayment = ()=> {
+    console.log("Deleting transaction "+ formData.transactionId);
+  
+    const cookies = new Cookies();
+    console.log(cookies.get('jwt-token'));
+    // Set your JWT token in the headers
+    const jwtToken = cookies.get('jwt-token'); // Replace with your actual JWT token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+    axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
+    const transaction = {
+      id: formData.transactionId!,
+      description: formData.description,
+      amount: formData.amount!,
+      currency: 'ARS',
+      date: (new Date(formData.date!)).toISOString()!,
+    };
+
+    UserControllerApiFactory().deleteTransactions(transaction).then((response) => {
+      navigate('/');
+    });  
+  }
+
   const getDate = () => {
     const date = Date.now();
     const date2 = new Date(date);
@@ -136,9 +158,13 @@ const AddPayment = () => {
             Save
           </button>
         </div>
-        <button type="submit" className="btn btn-danger mb-3">
+        {params.type === "edit" && 
+        <div className="mb-3 row">
+        <button type="button" className="btn btn-danger mb-3" onClick={deletePayment} >
             Delete
           </button>
+        </div>
+        }
       </form>
     </div>
     </div>
