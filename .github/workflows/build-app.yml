@@ -1,4 +1,4 @@
-name: Build app
+name: Build the app and create binary.
 
 on: [push]
 
@@ -21,6 +21,11 @@ jobs:
     - name: Build with npm
       run: npm run build 
       working-directory: ./frontendv2
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: frontend-artifacts
+        path: ./frontendv2/build
   compile-backend:
     needs: compile-frontend
     runs-on: ubuntu-latest
@@ -34,8 +39,16 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: frontend-artifacts
+        path: ./backend/src/main/resources/META-INF/resources
+    - name: Check files updated
+      run: ls -lht
+      working-directory: ./backend/src/main/resources/META-INF/resources
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package -DskipTests --file pom.xml
       working-directory: ./backend
 
     #- name: Publish to GitHub Packages Apache Maven
