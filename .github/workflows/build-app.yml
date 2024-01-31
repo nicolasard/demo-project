@@ -30,7 +30,7 @@ jobs:
     needs: compile-frontend
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      permissions: write-all
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
