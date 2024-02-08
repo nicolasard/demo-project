@@ -55,8 +55,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.sha }}
-        release_name: Release ${{ github.sha }}
+        tag_name: $(date +'%Y-%m-%d')
+        release_name: Release $(date +'%Y-%m-%d')
         draft: false
         prerelease: false
     - name: Upload JAR to Release
