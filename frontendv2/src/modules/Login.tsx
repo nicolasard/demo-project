@@ -1,5 +1,6 @@
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import {  AuthorizeRequest, AuthorizeRequestAuthenticationTypeEnum, UserControllerApiFactory } from './generated-api/api';
+import axios from 'axios';
 
 function Login() {
   
@@ -19,6 +20,7 @@ function Login() {
 }
 
 function onSuccess(credentialResponse: CredentialResponse){
+  axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
   var authorizeRequest:AuthorizeRequest = new Object();
   authorizeRequest.authenticationType=AuthorizeRequestAuthenticationTypeEnum.GoogleAuth;
   authorizeRequest.token=credentialResponse.credential;
