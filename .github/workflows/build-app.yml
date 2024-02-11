@@ -38,6 +38,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+    - name: Get last version
+      run: ./getVersion.sh
     - name: Download Artifacts
       uses: actions/download-artifact@v2
       with:
@@ -46,12 +48,12 @@ jobs:
     - name: Check files updated
       run: ls -lht
       working-directory: ./backend/src/main/resources/META-INF/resources
+    - name: Set Maven version
+      run: mvn versions:set -DnewVersion=$env.NEXT_TAG
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
       working-directory: ./backend
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: |
-          ./backend/target/demo-project-1.0-SNAPSHOT.jar
+    - name: List compiled files
+      run: ls ./backend/target/
+    - name: Creating tag
+      run: ./tagRepo.sh
