@@ -49,12 +49,12 @@ jobs:
       run: ls -lht
       working-directory: ./backend/src/main/resources/META-INF/resources
     - name: Set Maven version
-      run: mvn versions:set -DnewVersion=$env.NEXT_TAG
+      run: mvn versions:set -DnewVersion=$NEXT_TAG
       working-directory: ./backend
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
       working-directory: ./backend
     - name: List compiled files
-      run: ls ./backend/target/
+      run: ls -lht ./backend/target/
     - name: Creating tag
       run: ./tagRepo.sh
