@@ -40,9 +40,7 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
     - name: Get last version
       id: get_last_version
-      run: |
-        ./getVersion.sh
-        echo "::set-output name=tag::$NEXT_TAG"
+      run: ./getVersion.sh
     - name: Download Artifacts
       uses: actions/download-artifact@v2
       with:
@@ -64,6 +62,6 @@ jobs:
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ steps.get_last_version.outputs.tag }}
-        name: Demo-project ${{ steps.get_last_version.outputs.tag }}
+        tag_name: ${{env.NEXT_TAG}}
+        name: Demo-project ${{env.NEXT_TAG}}
         files: ./backend/target/*.jar
