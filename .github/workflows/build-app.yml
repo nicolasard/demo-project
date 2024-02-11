@@ -59,6 +59,7 @@ jobs:
     - name: Create release
       uses: ncipollo/release-action@v1
       with:
+        name: Demo-project ${NEXT_TAG}
         artifacts: "./backend/target/*.jar"
     - name: Creating tag
       run: ./tagRepo.sh
