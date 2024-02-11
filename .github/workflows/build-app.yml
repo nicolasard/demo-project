@@ -56,5 +56,10 @@ jobs:
       working-directory: ./backend
     - name: List compiled files
       run: ls -lht ./backend/target/
+    - name: Upload the artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: demo-project $NEXT_TAG
+        path: ./backend/target/*.jar
     - name: Creating tag
       run: ./tagRepo.sh
