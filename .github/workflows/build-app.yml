@@ -57,9 +57,9 @@ jobs:
     - name: List compiled files
       run: ls -lht ./backend/target/
     - name: Create release
-      uses: ncipollo/release-action@v1
+      uses: softprops/action-gh-release@v1
       with:
         name: Demo-project ${NEXT_TAG}
-        artifacts: "./backend/target/*.jar"
+        files: ./backend/target/*.jar
     - name: Creating tag
       run: ./tagRepo.sh
