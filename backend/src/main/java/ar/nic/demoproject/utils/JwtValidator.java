@@ -33,7 +33,7 @@ public class JwtValidator {
     private final String googleJWKKeysUri;
 
     private final String googleJWTAudience;
-    
+
     public JwtValidator(@Value("${jwt-token.google.jwk-keys-uri}") final String googleJWKKeysUri,
                         @Value("${jwt-token.google.audience}") final String googleJWTAudience) {
         this.googleJWKKeysUri = googleJWKKeysUri;
@@ -78,7 +78,7 @@ public class JwtValidator {
      * @param jwtToken
      */
     public Mono<JwtUser> validateGoogleToken(final String jwtToken){
-        final String publicKeyId = Jwts.parser().build().parse(jwtToken).getHeader().get("kid").toString();
+        final String publicKeyId = Jwts.parser().unsecured().build().parse(jwtToken).getHeader().get("kid").toString();
         return loadRSAfromJWK(publicKeyId).flatMap(key -> {
             Jws<Claims> claimsJws = Jwts.parser()
                     .verifyWith((PublicKey) key.getPublicKey())
