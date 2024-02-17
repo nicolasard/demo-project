@@ -1,13 +1,16 @@
 package ar.nic.demoproject.utils;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jwt.JWT;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -17,11 +20,15 @@ import reactor.core.publisher.Mono;
 import java.security.Key;
 import java.security.PublicKey;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Reactive services to validate JWT tokens from different providers like google.
+ * TODO: Move all auth oauth2 stuff to another mvn package.
  */
 @Component
 public class JwtValidator {
@@ -78,19 +85,27 @@ public class JwtValidator {
      * @param jwtToken
      */
     public Mono<JwtUser> validateGoogleToken(final String jwtToken){
-        final String publicKeyId = Jwts.parser().unsecured().build().parse(jwtToken).getHeader().get("kid").toString();
+        final String publicKeyId = this.getKid(jwtToken);
         return loadRSAfromJWK(publicKeyId).flatMap(key -> {
             Jws<Claims> claimsJws = Jwts.parser()
                     .verifyWith((PublicKey) key.getPublicKey())
                     .requireAudience(this.googleJWTAudience)
                     .build()
                     .parseSignedClaims(jwtToken.trim());
-
             JwtUser jwtUser = new JwtUser();
             jwtUser.setFullName(claimsJws.getPayload().get("name", String.class));
             jwtUser.setEmail(claimsJws.getPayload().get("email", String.class));
             return Mono.just(jwtUser);
         });
+    }
+
+    public String getKid(final String jwtToken){
+        try {
+            final JWSObject jwsObject = JWSObject.parse(jwtToken);
+            return jwsObject.getHeader().getKeyID();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static class RsaKey {
