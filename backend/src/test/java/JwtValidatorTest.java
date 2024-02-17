@@ -21,7 +21,7 @@ public class JwtValidatorTest {
 
     @Test
     void loadJwkTest() {
-        this.jwtValidator.loadJWK();
+        this.jwtValidator.loadRSAfromJWK("123");
     }
 
     @Test

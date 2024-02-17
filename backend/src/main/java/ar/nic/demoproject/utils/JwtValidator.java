@@ -33,9 +33,7 @@ public class JwtValidator {
     private final String googleJWKKeysUri;
 
     private final String googleJWTAudience;
-
-    private RsaKey rsaKey;
-
+    
     public JwtValidator(@Value("${jwt-token.google.jwk-keys-uri}") final String googleJWKKeysUri,
                         @Value("${jwt-token.google.audience}") final String googleJWTAudience) {
         this.googleJWKKeysUri = googleJWKKeysUri;
@@ -43,10 +41,10 @@ public class JwtValidator {
         this.webClient = WebClient.create();
     }
 
-    public Mono<RsaKey> loadJWK(){
+    public Mono<RsaKey> loadRSAfromJWK(final String keyId){
         //TODO: Cache the key here, so we don't download the JWK from the internet everytime a user logs in.
         final Mono<String> jsonString = webClient.get().uri(googleJWKKeysUri).retrieve().bodyToMono(String.class);
-        return jsonString.map(JwtValidator::getParse).map(JWKSet::getKeys).flatMap(this::getPublicKeys);
+        return jsonString.map(JwtValidator::getParse).map(JWKSet::getKeys).flatMap(e->this.getPublicKeys(e,keyId));
     }
 
     private static JWKSet getParse(String s) {
@@ -58,22 +56,21 @@ public class JwtValidator {
         }
     }
 
-    private Mono<RsaKey> getPublicKeys(List<JWK> keys) {
+    private Mono<RsaKey> getPublicKeys(final List<JWK> keys, final String keyId) {
         final RsaKey rsaK = new RsaKey();
         try{
         for (final JWK jwk : keys){
             LOGGER.info(jwk.getKeyType() +  " - " + jwk.getAlgorithm() + " - " + jwk.getKeyID());
             rsaK.setPublicKey(jwk.toRSAKey().toPublicKey());
             rsaK.setExpirationTime(jwk.toRSAKey().getExpirationTime());
-            this.rsaKey = rsaK;
-            return Mono.just(rsaK);
+            if (keyId.equals(jwk.getKeyID())){
+                return Mono.just(rsaK);
+            }
         }
         }catch (final JOSEException e) {
-        //TODO: Investigate how to handle in a better way exceptions in react
         throw new RuntimeException(e);
     }
-        this.rsaKey = rsaK;
-        return Mono.just(rsaK);
+        throw new RuntimeException("Unable to find the keyId " + keyId);
     }
 
     /**
@@ -81,8 +78,8 @@ public class JwtValidator {
      * @param jwtToken
      */
     public Mono<JwtUser> validateGoogleToken(final String jwtToken){
-        final Date currentDate = new Date();
-        return loadJWK().flatMap(key -> {
+        final String publicKeyId = Jwts.parser().build().parse(jwtToken).getHeader().get("kid").toString();
+        return loadRSAfromJWK(publicKeyId).flatMap(key -> {
             Jws<Claims> claimsJws = Jwts.parser()
                     .verifyWith((PublicKey) key.getPublicKey())
                     .requireAudience(this.googleJWTAudience)
