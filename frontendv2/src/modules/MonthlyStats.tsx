@@ -22,6 +22,8 @@ function MonthlyStats() {
 
     const [amount, setAmount] = useState<string[]>([]);
 
+    const [lastMonthAmount, setLastMonthAmount] = useState<string[]>([]);
+
 
     const loadReport = async () => {
       try {
@@ -48,8 +50,17 @@ function MonthlyStats() {
             .reduce((acc, t) => acc + t.total!, 0);
           return sum.toString();
         });
+
+        const response2 = await UserControllerApiFactory().getTransactionsReport(month-1, year);
+        const lastMonthAmountArray: string[] = Array(totalDaysInMonth).fill('0').map((_, index) => {
+          const sum = response2.data
+            .filter((t) => dayArray.indexOf(t.day!.toString()) <= index)
+            .reduce((acc, t) => acc + t.total!, 0);
+          return sum.toString();
+        });
     
         setAmount(amountArray);
+        setLastMonthAmount(lastMonthAmountArray);
         setDays(dayArray);
         console.log(response.data);
       } catch (error) {
@@ -79,21 +90,27 @@ function MonthlyStats() {
 
         <div  style={{height:'600'}}>
         <Line
-  datasetIdKey='id'
-  options={{
-    maintainAspectRatio: false,
-  }}
-  data={{
-    labels: days,
-    datasets: [
-      {
-        label: "This month",
-        data: amount,
-        borderColor: '#0d6efd',
-        backgroundColor: '#0d6efd'
-      }
-    ],
-  }}/>
+        datasetIdKey='id'
+        options={{
+          maintainAspectRatio: false,
+        }}
+        data={{
+          labels: days,
+          datasets: [
+            {
+              label: "This month",
+              data: amount,
+              borderColor: '#0d6efd',
+              backgroundColor: '#0d6efd'
+            },
+            {
+              label: "Last month",
+              data: lastMonthAmount,
+              borderColor: '#808080',
+              backgroundColor: '#808080'
+            }
+          ],
+        }}/>
         </div>
         
     </div>
