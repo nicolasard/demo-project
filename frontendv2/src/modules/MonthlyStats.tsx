@@ -71,21 +71,24 @@ function MonthlyStats() {
     
   return (
     <div>
-
 <div className="container-fluid">
-      <div className="row">
-        <div className="col-sm-2">
+      <div className="row align-items-center">
+        <div className="col-auto">
         <button onClick={ () => navigate('/expense/new') } type="button" className="btn btn-primary" > <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-square-fill" viewBox="0 0 16 16">
   <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
 </svg> <FormattedMessage id = "app.header_add_expense"/></button>
         </div>
         <div className="col-sm-2">
-         <div style={{fontSize:32, fontWeight:4000 }}>{ new Date(Date.now()).toLocaleDateString(intl.locale, { month: 'long' })}</div>
+          <div className='row'>
+        <div className="col-auto">
+          <div style={{fontSize:32, fontWeight:4000 }}>{ new Date(Date.now()).toLocaleDateString(intl.locale, { month: 'long' })}</div>
         </div>
-        <div className="col-sm-2">
-         <div style={{fontSize:32, fontWeight:4000 }}>{ amount[amount.length-1] } €</div>
+        <div className="col-auto">
+          <div style={{fontSize:32, fontWeight:4000 }}>{ amount[amount.length-1] } €</div>
         </div>
-      </div>
+        </div>
+        </div>
+       </div>
     </div>
 
         <div  style={{height:'600'}}>
@@ -93,6 +96,7 @@ function MonthlyStats() {
         datasetIdKey='id'
         options={{
           maintainAspectRatio: false,
+          animation: false
         }}
         data={{
           labels: days,
