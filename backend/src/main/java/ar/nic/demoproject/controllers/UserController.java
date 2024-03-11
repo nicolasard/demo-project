@@ -1,10 +1,8 @@
 package ar.nic.demoproject.controllers;
 
-import ar.nic.demoproject.db.model.AuthenticationType;
-import ar.nic.demoproject.db.model.TotalDay;
-import ar.nic.demoproject.db.model.Transaction;
-import ar.nic.demoproject.db.model.UserProfile;
+import ar.nic.demoproject.db.model.*;
 import ar.nic.demoproject.entity.AuthorizeRequest;
+import ar.nic.demoproject.services.CategoryService;
 import ar.nic.demoproject.services.TransactionService;
 import ar.nic.demoproject.services.PrincipalMapperService;
 
@@ -22,11 +20,14 @@ public class UserController {
 
     private final TransactionService transactionService;
 
+    private final CategoryService categoryService;
+
     private final PrincipalMapperService principalMapper;
 
     @Autowired
-    public UserController(final TransactionService transactionService, PrincipalMapperService principalMapper) {
+    public UserController(final TransactionService transactionService, CategoryService categoryService, PrincipalMapperService principalMapper) {
         this.transactionService = transactionService;
+        this.categoryService = categoryService;
         this.principalMapper = principalMapper;
     }
 
@@ -38,6 +39,11 @@ public class UserController {
     @GetMapping("/getProfile")
     Mono<UserProfile> getProfile(Principal principal) {
         return Mono.just(principal).flatMap(principalMapper::getUserProfile);
+    }
+
+    @GetMapping("/categories")
+    Flux<Category> getCategories(Principal principal) {
+        return categoryService.getCategories();
     }
 
     @GetMapping("/transactions")
