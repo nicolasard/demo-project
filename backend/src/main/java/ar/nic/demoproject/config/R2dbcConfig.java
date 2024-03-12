@@ -31,7 +31,8 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     @Override
     protected List<Object> getCustomConverters() {
         return List.of(
-                new UserProfileReadingConverter()
+                new UserProfileReadingConverter(),
+                new TransactionReadingConverter()
         );
     }
 
