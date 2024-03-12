@@ -106,7 +106,7 @@ const HomePayments = () => {
                   <div className="col d-flex align-items-center">
                     <div className="p-0">
                       <div>{transaction.description}</div>
-                      <div className='font-weight-light' style={{color: '#99979c'}}>Category</div>
+                      <div className='font-weight-light' style={{color: '#99979c'}}>{transaction.category? transaction.category.categoryName : 'Unknow category'}</div>
                     </div>
                   </div>
                   <div className="col-auto d-flex align-items-center">

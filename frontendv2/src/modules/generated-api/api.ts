@@ -51,6 +51,25 @@ export const AuthorizeRequestAuthenticationTypeEnum = {
 export type AuthorizeRequestAuthenticationTypeEnum = typeof AuthorizeRequestAuthenticationTypeEnum[keyof typeof AuthorizeRequestAuthenticationTypeEnum];
 
 /**
+ * Categories for the expenses
+ * @export
+ * @interface Category
+ */
+export interface Category {
+    /**
+     * 
+     * @type {number}
+     * @memberof Category
+     */
+    'categoryId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Category
+     */
+    'categoryName'?: string;
+}
+/**
  * The ISO 4217 currencies table.
  * @export
  * @interface Currency
@@ -174,6 +193,12 @@ export interface Transaction {
      * @memberof Transaction
      */
     'description'?: string;
+    /**
+     * 
+     * @type {Category}
+     * @memberof Transaction
+     */
+    'category'?: Category;
 }
 /**
  * The user information in the system.
@@ -277,6 +302,35 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(transaction, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCategories: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/categories`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -534,6 +588,17 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getCategories(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Category>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCategories(options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['UserControllerApi.getCategories']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async getProfile(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserProfile>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getProfile(options);
             const index = configuration?.serverIndex ?? 0;
@@ -635,6 +700,14 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getCategories(options?: any): AxiosPromise<Array<Category>> {
+            return localVarFp.getCategories(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getProfile(options?: any): AxiosPromise<UserProfile> {
             return localVarFp.getProfile(options).then((request) => request(axios, basePath));
         },
@@ -715,6 +788,16 @@ export class UserControllerApi extends BaseAPI {
      */
     public deleteTransactions(transaction: Transaction, options?: AxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).deleteTransactions(transaction, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserControllerApi
+     */
+    public getCategories(options?: AxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).getCategories(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
