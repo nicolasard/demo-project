@@ -38,7 +38,7 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
 
     //TODO This reader/writer should be in a custom package
     @ReadingConverter
-    class UserProfileReadingConverter implements Converter<Row, UserProfile> {
+    static class UserProfileReadingConverter implements Converter<Row, UserProfile> {
         @Override
         public UserProfile convert(final Row row) {
             final Currency currency = new Currency(row.get("currency_code", String.class));
@@ -52,7 +52,7 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     }
 
     @WritingConverter
-    class UserProfileWritingConverter implements Converter<UserProfile, Row> {
+    static class UserProfileWritingConverter implements Converter<UserProfile, Row> {
 
         @Override
         public Row convert(final UserProfile userProfile) {
@@ -61,7 +61,7 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     }
 
     @ReadingConverter
-    class TransactionReadingConverter implements Converter<Row, Transaction> {
+    static class TransactionReadingConverter implements Converter<Row, Transaction> {
         @Override
         public Transaction convert(final Row row) {
             final Category category = new Category();
@@ -74,7 +74,9 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
             transaction.setCurrency(row.get("currency", String.class));
             transaction.setDescription(row.get("description", String.class));
             transaction.setDate(row.get("date", Instant.class));
-            transaction.setCategory(category);
+            if (category.getCategoryId()!=null){
+                transaction.setCategory(category);
+            }
             return transaction;
         }
     }
