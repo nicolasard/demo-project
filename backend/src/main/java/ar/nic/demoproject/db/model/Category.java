@@ -2,20 +2,22 @@ package ar.nic.demoproject.db.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Schema(title = "Category", description = "Categories for the expenses")
+@Table("category")
 public class Category {
 
     @Id
-    String categoryId;
+    Integer categoryId;
 
     String categoryName;
 
-    public String getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
     }
 

@@ -1,6 +1,8 @@
 package ar.nic.demoproject.config;
 
+import ar.nic.demoproject.db.model.Category;
 import ar.nic.demoproject.db.model.Currency;
+import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
@@ -11,6 +13,9 @@ import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
 
+import java.math.BigInteger;
+import java.time.DateTimeException;
+import java.time.Instant;
 import java.util.List;
 
 @Configuration
@@ -51,6 +56,25 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
         @Override
         public Row convert(final UserProfile userProfile) {
             return null;
+        }
+    }
+
+    @ReadingConverter
+    class TransactionReadingConverter implements Converter<Row, Transaction> {
+        @Override
+        public Transaction convert(final Row row) {
+            final Category category = new Category();
+            category.setCategoryId(row.get("category_id", Integer.class));
+            category.setCategoryName(row.get("category_name", String.class));
+            final Transaction transaction = new Transaction();
+            transaction.setId(row.get("transactionId", Integer.class));
+            transaction.setUserInternalId(row.get("userInternalId", Integer.class));
+            transaction.setAmount(row.get("amount", Float.class));
+            transaction.setCurrency(row.get("currency", String.class));
+            transaction.setDescription(row.get("description", String.class));
+            transaction.setDate(row.get("date", Instant.class));
+            transaction.setCategory(category);
+            return transaction;
         }
     }
 }

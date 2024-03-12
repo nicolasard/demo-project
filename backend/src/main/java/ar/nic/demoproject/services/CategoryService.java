@@ -1,7 +1,6 @@
 package ar.nic.demoproject.services;
 
 import ar.nic.demoproject.db.model.Category;
-import ar.nic.demoproject.db.model.UserProfile;
 import ar.nic.demoproject.db.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
