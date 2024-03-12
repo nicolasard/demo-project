@@ -19,7 +19,8 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
             " WHERE t.userInternalId = :userInternalId AND MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year ORDER BY t.`date` DESC")
     Flux<Transaction> findAllByUserInternalId(Mono<Integer> userInternalId, final int month, final int year);
 
-    @Query("SELECT * FROM transactions t WHERE t.userInternalId = :userInternalId AND t.transactionId = :transactionId")
+    @Query("SELECT * FROM transactions t LEFT JOIN category c ON t.category_id = c.category_id" +
+            " WHERE t.userInternalId = :userInternalId AND t.transactionId = :transactionId")
     Mono<Transaction> findByUserInternalIdAndTransactionId(Mono<Integer> userInternalId, Long transactionId);
 
     @Query("SELECT DAY(t.`date`) AS day ,ROUND(SUM(amount),2) AS total \n" +
