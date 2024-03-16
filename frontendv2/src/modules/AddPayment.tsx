@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import { UserControllerApiFactory } from './generated-api/api';
+import { UserControllerApiFactory, Category } from './generated-api/api';
 import { useParams, useNavigate } from 'react-router-dom';
-import {FormattedMessage} from 'react-intl';
-
+import { FormattedMessage } from 'react-intl';
 const AddPayment = () => {
 
   //Hooks area 
@@ -12,11 +11,17 @@ const AddPayment = () => {
 
   const params= useParams()
 
-  const [formData, setFormData] = useState<{ description: string | undefined; amount: number | null , transactionId: number | null, date: Date | null}>({
+  const [formData, setFormData] = useState<{ description: string | undefined; amount: number | null ,
+     transactionId: number | null, date: Date | null, categoryId: number | undefined }>({
     description: undefined,
     amount: null,
     transactionId: null,
+    categoryId: undefined,
     date: new Date(Date.now())
+  });
+
+  const [categories, setCategories] = useState<{ category: Category[]}>({
+    category: []
   });
 
   useEffect(() => {
@@ -40,8 +45,12 @@ const AddPayment = () => {
       date: getDate(),
     };
 
+    UserControllerApiFactory().getCategories().then( (response)=> {
+      setCategories({category: response.data})
+    });
+
     UserControllerApiFactory().getTransaction(expenseId).then( (response) => {
-      setFormData({ description: response.data.description,amount: response.data.amount , transactionId : response.data.id!,date: new Date(response.data.date)});
+      setFormData({ description: response.data.description,amount: response.data.amount , transactionId : response.data.id!,date: new Date(response.data.date), categoryId: response.data.category?.categoryId});
     });
     
   }
@@ -138,11 +147,25 @@ const AddPayment = () => {
           </div>
         </div>
         <div className="mb-3 row">
-          <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
+          <label htmlFor="amount" className="col-sm-2 col-form-label">
           <FormattedMessage id = "app.amount"/>
           </label>
           <div className="col-sm-10">
             <input type="number" step="0.01" className="form-control" id="amount" value={formData.amount!} onChange={handleChange} />
+          </div>
+        </div>
+        <div className="mb-3 row">
+          <label htmlFor="category" className="col-sm-2 col-form-label">
+          <FormattedMessage id = "app.category"/>
+          </label>
+          <div className="col-sm-10">
+          <select className="form-select" aria-label="Default select example" value={formData.categoryId}>
+            <option selected>Open this select menu</option>
+            {categories.category.map((value)=> (
+              <option value={value.categoryId}>{value.categoryName}</option>
+            )
+            )}
+          </select>
           </div>
         </div>
         <div className="mb-3 row">

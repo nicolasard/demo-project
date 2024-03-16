@@ -4,7 +4,7 @@ import axios from 'axios';
 import React from 'react';
 
 class MyAccount extends React.Component<any,{ userProfile: UserProfile|null }>{
-  
+
   constructor(props: any) {
     super(props);
     this.state = { userProfile:null };
@@ -14,7 +14,6 @@ class MyAccount extends React.Component<any,{ userProfile: UserProfile|null }>{
   componentDidMount(){
     this.getProfileFromWS();
   }
-  
 
   getProfileFromWS(){
     const cookies = new Cookies();
