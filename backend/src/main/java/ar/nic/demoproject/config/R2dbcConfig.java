@@ -12,9 +12,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
+import org.springframework.data.r2dbc.mapping.OutboundRow;
+import org.springframework.r2dbc.core.Parameter;
 
-import java.math.BigInteger;
-import java.time.DateTimeException;
 import java.time.Instant;
 import java.util.List;
 
@@ -32,7 +32,8 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     protected List<Object> getCustomConverters() {
         return List.of(
                 new UserProfileReadingConverter(),
-                new TransactionReadingConverter()
+                new TransactionReadingConverter(),
+                new TransactionWritingConverter()
         );
     }
 
@@ -48,15 +49,6 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
             userProfile.setInternalId(row.get("internal_id", Integer.class));
             userProfile.setDefaultCurrency(currency);
             return userProfile;
-        }
-    }
-
-    @WritingConverter
-    static class UserProfileWritingConverter implements Converter<UserProfile, Row> {
-
-        @Override
-        public Row convert(final UserProfile userProfile) {
-            return null;
         }
     }
 
@@ -78,6 +70,22 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
                 transaction.setCategory(category);
             }
             return transaction;
+        }
+    }
+
+    @WritingConverter
+    static class TransactionWritingConverter implements Converter<Transaction, OutboundRow> {
+        @Override
+        public OutboundRow convert(final Transaction transaction) {
+            final OutboundRow row = new OutboundRow();
+            row.put("category_id", Parameter.fromOrEmpty(transaction.getCategory().getCategoryId(),Integer.class));
+            row.put("transactionId", Parameter.fromOrEmpty(transaction.getId(),Integer.class));
+            row.put("userInternalId", Parameter.fromOrEmpty(transaction.getUserInternalId(),Integer.class));
+            row.put("amount", Parameter.fromOrEmpty(transaction.getUserInternalId(),Float.class));
+            row.put("currency", Parameter.fromOrEmpty(transaction.getCurrency(),String.class));
+            row.put("description", Parameter.fromOrEmpty(transaction.getDescription(),String.class));
+            row.put("date", Parameter.fromOrEmpty(transaction.getDate(),Instant.class));
+            return row;
         }
     }
 }

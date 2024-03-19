@@ -27,6 +27,16 @@ const AddPayment = () => {
   useEffect(() => {
     if (params.type === "edit"){
       getExpenseData(Number(params.expenseId))
+    }else {
+      const cookies = new Cookies();
+      console.log(cookies.get('jwt-token'));
+      // Set your JWT token in the headers
+      const jwtToken = cookies.get('jwt-token'); // Replace with your actual JWT token
+      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
+      UserControllerApiFactory().getCategories().then( (response)=> {
+        setCategories({category: response.data})
+      });
     }
   }, []);
 
@@ -64,6 +74,16 @@ const AddPayment = () => {
       [id]: id === 'date' ? new Date(value) : value ,
     }));
   };
+
+  const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { id, value } = event.target;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: id === 'categoryId' ? parseInt(value) : value,
+    }));
+  };
+
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     console.log('Saving transaction', formData);
@@ -111,6 +131,7 @@ const AddPayment = () => {
       id: formData.transactionId!,
       description: formData.description,
       amount: formData.amount!,
+      category: { categoryId: 1},
       currency: 'ARS',
       date: (new Date(formData.date!)).toISOString()!,
     };
@@ -159,7 +180,7 @@ const AddPayment = () => {
           <FormattedMessage id = "app.category"/>
           </label>
           <div className="col-sm-10">
-          <select className="form-select" aria-label="Default select example" value={formData.categoryId}>
+          <select className="form-select" aria-label="Default select example" value={formData.categoryId} onChange={handleChangeSelect} >
             <option selected>Open this select menu</option>
             {categories.category.map((value)=> (
               <option value={value.categoryId}>{value.categoryName}</option>
