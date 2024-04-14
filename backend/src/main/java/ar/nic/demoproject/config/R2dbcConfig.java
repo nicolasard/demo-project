@@ -81,7 +81,7 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
             row.put("category_id", Parameter.fromOrEmpty(transaction.getCategory().getCategoryId(),Integer.class));
             row.put("transactionId", Parameter.fromOrEmpty(transaction.getId(),Integer.class));
             row.put("userInternalId", Parameter.fromOrEmpty(transaction.getUserInternalId(),Integer.class));
-            row.put("amount", Parameter.fromOrEmpty(transaction.getUserInternalId(),Float.class));
+            row.put("amount", Parameter.fromOrEmpty(transaction.getAmount(),Float.class));
             row.put("currency", Parameter.fromOrEmpty(transaction.getCurrency(),String.class));
             row.put("description", Parameter.fromOrEmpty(transaction.getDescription(),String.class));
             row.put("date", Parameter.fromOrEmpty(transaction.getDate(),Instant.class));
