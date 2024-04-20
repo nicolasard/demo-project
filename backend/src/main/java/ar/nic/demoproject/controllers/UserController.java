@@ -6,6 +6,9 @@ import ar.nic.demoproject.services.CategoryService;
 import ar.nic.demoproject.services.TransactionService;
 import ar.nic.demoproject.services.PrincipalMapperService;
 
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
+import java.time.Instant;
 
 @RestController
 @RequestMapping("api")
@@ -24,11 +28,20 @@ public class UserController {
 
     private final PrincipalMapperService principalMapper;
 
+    final Tracer tracer = GlobalOpenTelemetry.getTracer("hello-world-tracer");
+
     @Autowired
     public UserController(final TransactionService transactionService, CategoryService categoryService, PrincipalMapperService principalMapper) {
         this.transactionService = transactionService;
         this.categoryService = categoryService;
         this.principalMapper = principalMapper;
+    }
+
+    @GetMapping("/hi")
+    Mono<String> hi() {
+        Span span = tracer.spanBuilder("helloWorldSpan").setAttribute("BROWSER","1234").setStartTimestamp(Instant.now()).startSpan();
+        span.end();
+        return Mono.just("Hello world");
     }
 
     @PostMapping("/authenticate")
@@ -38,6 +51,8 @@ public class UserController {
 
     @GetMapping("/getProfile")
     Mono<UserProfile> getProfile(Principal principal) {
+        Span span  = tracer.spanBuilder("get-profile-controller").setAttribute("User","1234").startSpan();
+        span.end();
         return Mono.just(principal).flatMap(principalMapper::getUserProfile);
     }
 

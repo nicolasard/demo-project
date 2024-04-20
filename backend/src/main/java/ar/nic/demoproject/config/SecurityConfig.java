@@ -31,9 +31,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http){
-
         final PublicKey publicKey = (PublicKey) jwtTokenUtils.getPublicKey();
-
         http.csrf().disable()
                 .cors().configurationSource(request -> createCorsConfigSource())
                 .and().authorizeExchange().pathMatchers("/*","/static/**","/actuator/**",
@@ -41,6 +39,7 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/api/authenticate/**",
+                        "/api/hi",
                         "/swagger-ui.html").permitAll()
                 .anyExchange().authenticated().and().oauth2ResourceServer().jwt().publicKey((RSAPublicKey) publicKey);
         return http.build();
