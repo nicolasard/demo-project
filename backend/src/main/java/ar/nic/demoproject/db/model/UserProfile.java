@@ -21,8 +21,7 @@ public class UserProfile {
 
     private Integer internalId;
 
-    @Transient
-    private Currency defaultCurrency;
+    @Transient private Currency defaultCurrency;
 
     public String getFullName() {
         return fullName;

@@ -10,8 +10,7 @@ public class Currency {
         this.currencyCode = currencyCode;
     }
 
-    @Id
-    String currencyCode;
+    @Id String currencyCode;
 
     String currencyDescription;
 
