@@ -77,7 +77,6 @@ const AddPayment = () => {
 
   const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { id, value } = event.target;
-
     setFormData((prevData) => ({
       ...prevData,
       [id]: id === 'categoryId' ? parseInt(value) : value,
@@ -131,7 +130,7 @@ const AddPayment = () => {
       id: formData.transactionId!,
       description: formData.description,
       amount: formData.amount!,
-      category: { categoryId: 1},
+      category: { categoryId: formData.categoryId},
       currency: 'ARS',
       date: (new Date(formData.date!)).toISOString()!,
     };
@@ -180,7 +179,7 @@ const AddPayment = () => {
           <FormattedMessage id = "app.category"/>
           </label>
           <div className="col-sm-10">
-          <select className="form-select" aria-label="Default select example" value={formData.categoryId} onChange={handleChangeSelect} >
+          <select className="form-select" aria-label="Default select example" id="categoryId" value={formData.categoryId} onChange={handleChangeSelect} >
             <option selected>Open this select menu</option>
             {categories.category.map((value)=> (
               <option value={value.categoryId}>{value.categoryName}</option>
