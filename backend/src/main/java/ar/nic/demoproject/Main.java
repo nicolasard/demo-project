@@ -11,7 +11,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(proxyBeanMethods = false)
-@OpenAPIDefinition(info = @Info(title = "Demo project", version = "1.0", description = "Documentation APIs v1.0"))
+@OpenAPIDefinition(
+        info =
+                @Info(
+                        title = "Demo project",
+                        version = "1.0",
+                        description = "Documentation APIs v1.0"))
 public class Main {
     public static void main(String[] args) {
         SdkTracerProvider tracerProvider = SdkTracerProvider.builder()

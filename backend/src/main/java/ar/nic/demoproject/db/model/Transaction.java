@@ -1,16 +1,13 @@
 package ar.nic.demoproject.db.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
-import java.time.Instant;
-import java.time.ZonedDateTime;
 
 @Schema(title = "Transactions", description = "Transactions made.")
 @Table("transactions")
@@ -24,7 +21,7 @@ public class Transaction {
     @NotNull(message = "Field 'amount' must not be empty.")
     private Float amount;
 
-    @Schema(maxLength = 3,requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(maxLength = 3, requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Field 'currency' must not be null or empty.")
     private String currency;
 
@@ -37,8 +34,7 @@ public class Transaction {
 
     private String description;
 
-    @Transient
-    private Category category;
+    @Transient private Category category;
 
     public Integer getId() {
         return id;

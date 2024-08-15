@@ -3,18 +3,17 @@ package ar.nic.demoproject.controllers;
 import ar.nic.demoproject.db.model.*;
 import ar.nic.demoproject.entity.AuthorizeRequest;
 import ar.nic.demoproject.services.CategoryService;
-import ar.nic.demoproject.services.TransactionService;
 import ar.nic.demoproject.services.PrincipalMapperService;
-
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.Tracer;
+import ar.nic.demoproject.services.TransactionService;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.security.Principal;
 import java.time.Instant;
 
@@ -31,7 +30,10 @@ public class UserController {
     final Tracer tracer = GlobalOpenTelemetry.getTracer("hello-world-tracer");
 
     @Autowired
-    public UserController(final TransactionService transactionService, CategoryService categoryService, PrincipalMapperService principalMapper) {
+    public UserController(
+            final TransactionService transactionService,
+            CategoryService categoryService,
+            PrincipalMapperService principalMapper) {
         this.transactionService = transactionService;
         this.categoryService = categoryService;
         this.principalMapper = principalMapper;
@@ -46,7 +48,8 @@ public class UserController {
 
     @PostMapping("/authenticate")
     Mono<String> authenticate(@RequestBody AuthorizeRequest authorizeRequest) {
-        return principalMapper.authenticate(authorizeRequest.getAuthenticationType(),authorizeRequest.getToken());
+        return principalMapper.authenticate(
+                authorizeRequest.getAuthenticationType(), authorizeRequest.getToken());
     }
 
     @GetMapping("/getProfile")
@@ -62,32 +65,60 @@ public class UserController {
     }
 
     @GetMapping("/transactions")
-    Flux<Transaction> getTransactionsPage(Principal principal, @RequestParam("month") Integer month, @RequestParam("year") Integer year) {
-        return principalMapper.getUserProfile(principal).map( t-> transactionService.getTransactions(t,month,year)).flatMapMany(f->f);
+    Flux<Transaction> getTransactionsPage(
+            Principal principal,
+            @RequestParam("month") Integer month,
+            @RequestParam("year") Integer year) {
+        return principalMapper
+                .getUserProfile(principal)
+                .map(t -> transactionService.getTransactions(t, month, year))
+                .flatMapMany(f -> f);
     }
 
     @GetMapping("/transactions/{transactionId}")
-    Mono<Transaction> getTransaction(Principal principal, @PathVariable("transactionId") Long transactionId) {
-        return principalMapper.getUserProfile(principal).map(t -> transactionService.getTransactions(t,transactionId)).flatMap(f->f);
+    Mono<Transaction> getTransaction(
+            Principal principal, @PathVariable("transactionId") Long transactionId) {
+        return principalMapper
+                .getUserProfile(principal)
+                .map(t -> transactionService.getTransactions(t, transactionId))
+                .flatMap(f -> f);
     }
 
     @PostMapping("/transactions")
-    Mono<Transaction> postTransactions(Principal principal,@Valid  @RequestBody Mono<Transaction> transaction) {
-        return principalMapper.getUserProfile(principal).map(t->transactionService.saveTransaction(transaction,t)).flatMap(f->f);
+    Mono<Transaction> postTransactions(
+            Principal principal, @Valid @RequestBody Mono<Transaction> transaction) {
+        return principalMapper
+                .getUserProfile(principal)
+                .map(t -> transactionService.saveTransaction(transaction, t))
+                .flatMap(f -> f);
     }
 
     @PutMapping("/transactions")
-    Mono<Transaction> putTransactions(Principal principal,@Valid  @RequestBody Mono<Transaction> transaction) {
-        return principalMapper.getUserProfile(principal).map(t->transactionService.saveTransaction(transaction,t)).flatMap(f->f);
+    Mono<Transaction> putTransactions(
+            Principal principal, @Valid @RequestBody Mono<Transaction> transaction) {
+        return principalMapper
+                .getUserProfile(principal)
+                .map(t -> transactionService.saveTransaction(transaction, t))
+                .flatMap(f -> f);
     }
 
     @DeleteMapping("/transactions")
-    Mono<Void> deleteTransactions(Principal principal,@Valid  @RequestBody Mono<Transaction> transaction) {
-        return principalMapper.getUserProfile(principal).map(t->transactionService.deleteTransaction(transaction,t)).flatMap(f->f);
+    Mono<Void> deleteTransactions(
+            Principal principal, @Valid @RequestBody Mono<Transaction> transaction) {
+        return principalMapper
+                .getUserProfile(principal)
+                .map(t -> transactionService.deleteTransaction(transaction, t))
+                .flatMap(f -> f);
     }
 
     @GetMapping("/transactions/monthly-report/{year}/{month}")
-    Flux<TotalDay> getTransactionsReport(Principal principal, @PathVariable("month") Integer month, @PathVariable("year") Integer year) {
-        return principalMapper.getUserProfile(principal).map(t->transactionService.getTotalPerDay(t,month,year)).flatMapMany(f->f);
+    Flux<TotalDay> getTransactionsReport(
+            Principal principal,
+            @PathVariable("month") Integer month,
+            @PathVariable("year") Integer year) {
+        return principalMapper
+                .getUserProfile(principal)
+                .map(t -> transactionService.getTotalPerDay(t, month, year))
+                .flatMapMany(f -> f);
     }
 }

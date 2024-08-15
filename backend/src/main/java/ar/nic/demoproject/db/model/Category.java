@@ -8,8 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("category")
 public class Category {
 
-    @Id
-    Integer categoryId;
+    @Id Integer categoryId;
 
     String categoryName;
 

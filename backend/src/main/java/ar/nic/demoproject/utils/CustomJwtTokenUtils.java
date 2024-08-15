@@ -1,16 +1,13 @@
 package ar.nic.demoproject.utils;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-/**
- * Spring component to manipulate my custom JWT token
- */
+/** Spring component to manipulate my custom JWT token */
 @Component
 public class CustomJwtTokenUtils {
 
@@ -22,8 +19,9 @@ public class CustomJwtTokenUtils {
 
     final Key publicKey;
 
-    public CustomJwtTokenUtils(@Value("${jwt-token.keystore-path}") final String keyStorePath,
-                               @Value("${jwt-token.keystore-password}") final String keyStoreKey) {
+    public CustomJwtTokenUtils(
+            @Value("${jwt-token.keystore-path}") final String keyStorePath,
+            @Value("${jwt-token.keystore-password}") final String keyStoreKey) {
         this.keyStorePath = keyStorePath;
         this.keyStoreKey = keyStoreKey;
 
@@ -32,23 +30,26 @@ public class CustomJwtTokenUtils {
             try (FileInputStream fis = new FileInputStream(this.keyStorePath)) {
                 keystore.load(fis, this.keyStoreKey.toCharArray());
                 final String alias = keystore.aliases().nextElement();
-                privateKey = keystore.getKey(alias,this.keyStoreKey.toCharArray());
+                privateKey = keystore.getKey(alias, this.keyStoreKey.toCharArray());
                 publicKey = keystore.getCertificate(alias).getPublicKey();
             }
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException |
-                 UnrecoverableKeyException e) {
+        } catch (KeyStoreException
+                | IOException
+                | NoSuchAlgorithmException
+                | CertificateException
+                | UnrecoverableKeyException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Key getPrivateKey(){
+    public Key getPrivateKey() {
         if (privateKey != null) {
             return privateKey;
         }
         throw new IllegalStateException("Private key is null");
     }
 
-    public Key getPublicKey(){
+    public Key getPublicKey() {
         if (publicKey != null) {
             return publicKey;
         }

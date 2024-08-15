@@ -20,11 +20,12 @@ public class ErrorResponse {
         return errorResponsesDetailsList;
     }
 
-    public void setErrorResponsesDetailsList(List<ErrorResponsesDetails> errorResponsesDetailsList) {
+    public void setErrorResponsesDetailsList(
+            List<ErrorResponsesDetails> errorResponsesDetailsList) {
         this.errorResponsesDetailsList = errorResponsesDetailsList;
     }
 
-    public static class ErrorResponsesDetails{
+    public static class ErrorResponsesDetails {
 
         String field;
 
