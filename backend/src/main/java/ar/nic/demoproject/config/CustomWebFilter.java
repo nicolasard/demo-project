@@ -10,12 +10,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
-import java.time.Instant;
-
-/**
- * Custom filter to intercept the requests and measure the time used with Otel
- */
+/** Custom filter to intercept the requests and measure the time used with Otel */
 @Component
 public class CustomWebFilter implements WebFilter {
 
@@ -26,11 +21,13 @@ public class CustomWebFilter implements WebFilter {
         final String userAgent = exchange.getRequest().getHeaders().getFirst("User-Agent");
         final String requestUri = exchange.getRequest().getURI().getPath();
         final SpanBuilder spanBuilder = tracer.spanBuilder("mainSpan");
-        spanBuilder.setAttribute("BROWSER",userAgent);
-        spanBuilder.setAttribute("URI",requestUri);
+        spanBuilder.setAttribute("BROWSER", userAgent);
+        spanBuilder.setAttribute("URI", requestUri);
         final Span span = spanBuilder.startSpan();
-        return chain.filter(exchange).doFinally(signalType -> {
-            span.end();
-        });
+        return chain.filter(exchange)
+                .doFinally(
+                        signalType -> {
+                            span.end();
+                        });
     }
 }

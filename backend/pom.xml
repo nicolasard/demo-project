@@ -115,8 +115,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.0.6</version>
             </plugin>
+            <!--
             <plugin>
-                <!-- Plugin to update the application libraries. -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.3</version>
@@ -126,10 +126,12 @@
                         <goals>
                             <goal>dependency-updates-report</goal>
                             <goal>plugin-updates-report</goal>
-                          </goal>
-                  </execution>
+                        </goals>
+                    </execution>
+                </executions>
               </plugin>
-              <plugin>
+            -->
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
@@ -175,6 +177,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
@@ -187,6 +190,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>

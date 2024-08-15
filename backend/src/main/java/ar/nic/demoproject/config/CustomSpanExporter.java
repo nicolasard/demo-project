@@ -6,16 +6,15 @@ import io.opentelemetry.sdk.common.CompletableResultCode;
 import io.opentelemetry.sdk.common.InstrumentationScopeInfo;
 import io.opentelemetry.sdk.trace.data.SpanData;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is a custom Open Telemetry (OTEL) span expoter that implementes the otel SpanExporter.
- * It writes in a log file the result of the spans, in a compact way.
- * To do this I based on io.opentelemetry.exporter.logging.LoggingSpanExporter
+ * This is a custom Open Telemetry (OTEL) span expoter that implementes the otel SpanExporter. It
+ * writes in a log file the result of the spans, in a compact way. To do this I based on
+ * io.opentelemetry.exporter.logging.LoggingSpanExporter
  */
 public class CustomSpanExporter implements SpanExporter {
 
@@ -23,6 +22,7 @@ public class CustomSpanExporter implements SpanExporter {
 
     /**
      * Here we overwrite the export method to write a History log.
+     *
      * @param spans
      * @return
      */
