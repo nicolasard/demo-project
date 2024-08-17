@@ -1,6 +1,9 @@
 name: Build the app and create binary.
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   compile-frontend:
