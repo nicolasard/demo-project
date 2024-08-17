@@ -1,6 +1,6 @@
 package ar.nic.demoproject;
 
-import ar.nic.demoproject.config.CustomSpanExporter;
+import ar.nic.demoproject.config.CustomHistorySpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
@@ -21,7 +21,7 @@ public class Main {
         SdkTracerProvider tracerProvider =
                 SdkTracerProvider.builder()
                         // .addSpanProcessor(SimpleSpanProcessor.create(new LoggingSpanExporter()))
-                        .addSpanProcessor(SimpleSpanProcessor.create(new CustomSpanExporter()))
+                        .addSpanProcessor(SimpleSpanProcessor.create(new CustomHistorySpanExporter()))
                         .build();
 
         OpenTelemetrySdk.builder().setTracerProvider(tracerProvider).buildAndRegisterGlobal();

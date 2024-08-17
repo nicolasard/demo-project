@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * writes in a log file the result of the spans, in a compact way. To do this I based on
  * io.opentelemetry.exporter.logging.LoggingSpanExporter
  */
-public class CustomSpanExporter implements SpanExporter {
+public class CustomHistorySpanExporter implements SpanExporter {
 
     private static final Logger logger = Logger.getLogger(LoggingSpanExporter.class.getName());
 
