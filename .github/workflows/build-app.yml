@@ -45,18 +45,18 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: frontend-artifacts
-        path: ./backend/src/main/resources/META-INF/resources
+        path: ./backend/backend-app/src/main/resources/META-INF/resources
     - name: Check files updated
       run: ls -lht
-      working-directory: ./backend/src/main/resources/META-INF/resources
+      working-directory: ./backend/backend-app/src/main/resources/META-INF/resources
     - name: Set Maven version
       run: mvn versions:set -DnewVersion=$NEXT_TAG
-      working-directory: ./backend
+      working-directory: ./backend/
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
       working-directory: ./backend
     - name: List compiled files
-      run: ls -lht ./backend/target/
+      run: ls -lht ./backend/backend-app/target/
     - name: Creating tag
       run: ./tagRepo.sh
     - name: Create release
