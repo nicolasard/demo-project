@@ -1,5 +1,6 @@
 package ar.nic.demoproject.services;
 
+import ar.nic.demoproject.db.model.CategorySummary;
 import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import ar.nic.demoproject.db.model.UserProfile;
@@ -55,5 +56,10 @@ public class TransactionService {
     public Flux<TotalDay> getTotalPerDay(
             final UserProfile principal, final int month, final int year) {
         return this.transactionRepository.findTotalPerDay(principal.getInternalId(), month, year);
+    }
+
+    public Flux<CategorySummary> getCategorySummary(
+            final UserProfile principal, final int month, final int year) {
+        return this.transactionRepository.findTotalPerCategory(principal.getInternalId(), month, year);
     }
 }

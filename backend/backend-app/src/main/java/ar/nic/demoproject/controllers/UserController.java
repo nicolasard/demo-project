@@ -66,13 +66,13 @@ public class UserController {
     }
 
     @GetMapping("/categorySummary")
-    Flux<Transaction> getCategorySummary(
+    Flux<CategorySummary> getCategorySummary(
             Principal principal,
             @RequestParam("month") Integer month,
             @RequestParam("year") Integer year) {
         return principalMapper
                 .getUserProfile(principal)
-                .map(t -> transactionService.getTransactions(t, month, year))
+                .map(t -> transactionService.getCategorySummary(t, month, year))
                 .flatMapMany(f -> f);
     }
 
