@@ -1,5 +1,6 @@
 package ar.nic.demoproject.db.repository;
 
+import ar.nic.demoproject.db.model.CategorySummary;
 import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import org.springframework.data.r2dbc.repository.Query;
@@ -35,4 +36,7 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
                 + " MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year GROUP BY DAY(t.`date`) ORDER BY"
                 + " DAY(t.`date`) asc ")
     Flux<TotalDay> findTotalPerDay(final Integer userInternalId, final int month, final int year);
+
+    //TODO: Write the query
+    Flux<CategorySummary> findTotalPerCategory(final Integer internalId,final int month,final int year);
 }
