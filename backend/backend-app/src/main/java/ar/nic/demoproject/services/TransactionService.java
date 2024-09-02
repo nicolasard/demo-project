@@ -60,6 +60,7 @@ public class TransactionService {
 
     public Flux<CategorySummary> getCategorySummary(
             final UserProfile principal, final int month, final int year) {
-        return this.transactionRepository.findTotalPerCategory(principal.getInternalId(), month, year);
+        return this.transactionRepository.findTotalPerCategory(
+                principal.getInternalId(), month, year);
     }
 }
