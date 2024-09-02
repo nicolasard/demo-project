@@ -42,5 +42,5 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
                     + " c.category_id where MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year AND"
                     + " t.userInternalId = :userInternalId group by t.category_id ")
     Flux<CategorySummary> findTotalPerCategory(
-            final Integer internalId, final int month, final int year);
+            final Integer userInternalId, final int month, final int year);
 }
