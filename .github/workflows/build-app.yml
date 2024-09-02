@@ -64,4 +64,4 @@ jobs:
       with:
         tag_name: ${{env.NEXT_TAG}}
         name: Demo-project ${{env.NEXT_TAG}}
-        files: ./backend/target/*.jar
+        files: ./backend/backend-app/target/*.jar
