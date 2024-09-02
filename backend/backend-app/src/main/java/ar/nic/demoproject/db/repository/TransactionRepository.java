@@ -31,12 +31,16 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
             Mono<Integer> userInternalId, Long transactionId);
 
     @Query(
-            "SELECT DAY(t.`date`) AS day ,ROUND(SUM(amount),2) AS total \n"
+            "SELECT DAY(t.`date`) AS day ,ROUND(SUM(amount),2) AS total "
                 + "FROM transactions t WHERE userInternalId = :userInternalId AND"
                 + " MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year GROUP BY DAY(t.`date`) ORDER BY"
                 + " DAY(t.`date`) asc ")
     Flux<TotalDay> findTotalPerDay(final Integer userInternalId, final int month, final int year);
 
-    //TODO: Write the query
+    @Query(
+            "select sum(t.amount), t.category_id, c.category_name from transactions t " +
+            "LEFT JOIN category c ON t.category_id = c.category_id " +
+            "where MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year " +
+            "AND t.userInternalId = :userInternalId group by t.category_id ")
     Flux<CategorySummary> findTotalPerCategory(final Integer internalId,final int month,final int year);
 }
