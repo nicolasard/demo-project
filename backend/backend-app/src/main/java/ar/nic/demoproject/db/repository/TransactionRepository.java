@@ -38,7 +38,7 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
     Flux<TotalDay> findTotalPerDay(final Integer userInternalId, final int month, final int year);
 
     @Query(
-            "select sum(t.amount), t.category_id, c.category_name from transactions t " +
+            "select sum(t.amount) AS amount, t.category_id as category_id, c.category_name category_name from transactions t " +
             "LEFT JOIN category c ON t.category_id = c.category_id " +
             "where MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year " +
             "AND t.userInternalId = :userInternalId group by t.category_id ")
