@@ -68,8 +68,8 @@ public class UserController {
     @GetMapping("/category-summary/{year}/{month}")
     Flux<CategorySummary> getCategorySummary(
             Principal principal,
-            @RequestParam("month") Integer month,
-            @RequestParam("year") Integer year) {
+            @PathVariable("month") Integer month,
+            @PathVariable("year") Integer year) {
         return principalMapper
                 .getUserProfile(principal)
                 .map(t -> transactionService.getCategorySummary(t, month, year))
