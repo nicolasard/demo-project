@@ -57,17 +57,23 @@ public class UserController {
 
     @GetMapping("/getProfile")
     Mono<UserProfile> getProfile(Principal principal) {
-        Span span =
-                tracer.spanBuilder("get-profile-controller")
-                        .setAttribute("User", "1234")
-                        .startSpan();
-        span.end();
         return Mono.just(principal).flatMap(principalMapper::getUserProfile);
     }
 
     @GetMapping("/categories")
     Flux<Category> getCategories(Principal principal) {
         return categoryService.getCategories();
+    }
+
+    @GetMapping("/categorySummary")
+    Flux<CategorySummary> getCategorySummary(
+            Principal principal,
+            @RequestParam("month") Integer month,
+            @RequestParam("year") Integer year) {
+        return principalMapper
+                .getUserProfile(principal)
+                .map(t -> transactionService.getCategorySummary(t, month, year))
+                .flatMapMany(f -> f);
     }
 
     @GetMapping("/transactions")

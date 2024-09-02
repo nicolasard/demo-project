@@ -1,5 +1,6 @@
 package ar.nic.demoproject.db.repository;
 
+import ar.nic.demoproject.db.model.CategorySummary;
 import ar.nic.demoproject.db.model.TotalDay;
 import ar.nic.demoproject.db.model.Transaction;
 import org.springframework.data.r2dbc.repository.Query;
@@ -30,9 +31,16 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
             Mono<Integer> userInternalId, Long transactionId);
 
     @Query(
-            "SELECT DAY(t.`date`) AS day ,ROUND(SUM(amount),2) AS total \n"
-                + "FROM transactions t WHERE userInternalId = :userInternalId AND"
-                + " MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year GROUP BY DAY(t.`date`) ORDER BY"
-                + " DAY(t.`date`) asc ")
+            "SELECT DAY(t.`date`) AS day ,ROUND(SUM(amount),2) AS total FROM transactions t WHERE"
+                    + " userInternalId = :userInternalId AND MONTH(t.`date`)=:month AND"
+                    + " YEAR(t.`date`)=:year GROUP BY DAY(t.`date`) ORDER BY DAY(t.`date`) asc ")
     Flux<TotalDay> findTotalPerDay(final Integer userInternalId, final int month, final int year);
+
+    @Query(
+            "select sum(t.amount) AS amount, t.category_id as category_id, c.category_name"
+                    + " category_name from transactions t LEFT JOIN category c ON t.category_id ="
+                    + " c.category_id where MONTH(t.`date`)=:month AND YEAR(t.`date`)=:year AND"
+                    + " t.userInternalId = :userInternalId group by t.category_id ")
+    Flux<CategorySummary> findTotalPerCategory(
+            final Integer internalId, final int month, final int year);
 }

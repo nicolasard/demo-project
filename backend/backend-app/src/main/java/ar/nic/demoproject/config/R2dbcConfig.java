@@ -1,9 +1,6 @@
 package ar.nic.demoproject.config;
 
-import ar.nic.demoproject.db.model.Category;
-import ar.nic.demoproject.db.model.Currency;
-import ar.nic.demoproject.db.model.Transaction;
-import ar.nic.demoproject.db.model.UserProfile;
+import ar.nic.demoproject.db.model.*;
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.Row;
@@ -30,7 +27,8 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
         return List.of(
                 new UserProfileReadingConverter(),
                 new TransactionReadingConverter(),
-                new TransactionWritingConverter());
+                new TransactionWritingConverter(),
+                new CategorySummaryConverter());
     }
 
     // TODO This reader/writer should be in a custom package
@@ -68,6 +66,20 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
                 transaction.setCategory(category);
             }
             return transaction;
+        }
+    }
+
+    @ReadingConverter
+    static class CategorySummaryConverter implements Converter<Row, CategorySummary> {
+        @Override
+        public CategorySummary convert(final Row row) {
+            final CategorySummary categorySummary = new CategorySummary();
+            categorySummary.setTotal(row.get("amount", Double.class));
+            final Category category = new Category();
+            category.setCategoryName(row.get("category_name", String.class));
+            category.setCategoryId(row.get("category_id", Integer.class));
+            categorySummary.setCategory(category);
+            return categorySummary;
         }
     }
 
