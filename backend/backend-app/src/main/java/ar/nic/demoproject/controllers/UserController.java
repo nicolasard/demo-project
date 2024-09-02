@@ -65,7 +65,7 @@ public class UserController {
         return categoryService.getCategories();
     }
 
-    @GetMapping("/categorySummary")
+    @GetMapping("/category-summary/{year}/{month}")
     Flux<CategorySummary> getCategorySummary(
             Principal principal,
             @RequestParam("month") Integer month,
