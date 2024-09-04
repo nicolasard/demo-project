@@ -7,6 +7,7 @@ import 'chart.js/auto';
 import {FormattedMessage} from 'react-intl';
 import { useNavigate } from "react-router-dom"
 import { useIntl } from 'react-intl';
+import ApiClient from './common/ApiClient';
 
 function MonthlyStats() {
 
@@ -32,12 +33,8 @@ function MonthlyStats() {
     
         console.log('Getting transactions...');
     
-        const cookies = new Cookies();
-        const jwtToken = cookies.get('jwt-token');
-    
-        axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-        axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-    
+        ApiClient.setupAxiosHeaders();
+
         const response = await UserControllerApiFactory().getTransactionsReport(month, year);
     
         const totalDaysInMonth = new Date(year, month, 0).getDate();

@@ -4,11 +4,10 @@ import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import ApiClient from './common/ApiClient';
+import { Pie } from 'react-chartjs-2';
 
 
-
-const HomePayments = () => {
+const Summary = () => {
 
   const navigate = useNavigate();
 
@@ -26,7 +25,14 @@ const HomePayments = () => {
 
   const getTransactions = async () => {
     try {
-      ApiClient.setupAxiosHeaders();
+      console.log('Getting transactions...');
+      const cookies = new Cookies();
+      console.log(cookies.get('jwt-token'));
+
+      const jwtToken = cookies.get('jwt-token');
+      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
+
       const response = await UserControllerApiFactory().getTransactionsPage(month,year);
       if (response.status === 200) {
         console.log(response.data);
@@ -75,49 +81,32 @@ const HomePayments = () => {
 
   return (
     <div>
-
-      <div>
-
-      {transactions.map((transaction, index) => { 
-        const transactionDay = formatDate(transaction.date);
-        const isFirstTransactionOfDay = index === 0 || transactionDay !== formatDate(transactions[index - 1].date);
-        
-        return (
-          <div key={transactionDay}>
-            {isFirstTransactionOfDay && (
-              <div className="mb-2">
-                <strong>{transactionDay.toLocaleUpperCase()}</strong>
-              </div>
-            )}
-
-            <div className="card p-0 trans-list " style={{ marginBottom: 10}} onClick={() => goEdit(transaction)}>
-              <div className="card-body" style={{ paddingTop: 0, paddingBottom: 0 }}>
-                <div className="row" style={{ padding: 0 }}>
-                  <div className="col-auto">
-                    <div className="p-0">
-                      
-                    </div>
-                  </div>
-                  <div className="col d-flex align-items-center">
-                    <div className="p-0">
-                      <div>{transaction.description}</div>
-                      <div className='font-weight-light' style={{color: '#99979c'}}>{transaction.category? transaction.category.categoryName : 'Unknow category'}</div>
-                    </div>
-                  </div>
-                  <div className="col-auto d-flex align-items-center">
-                    <div className="p-0">
-                      <div style={{ fontSize: 16.2 }}>{transaction.amount} €</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })}
-  </div>
+        <div className="container-fluid">
+      <div className="row align-items-center">
+        <div className="col-sm-2">
+          <div className='row'>
+        <div className="col-auto">
+          <div style={{fontSize:32, fontWeight:4000 }}>{ new Date(Date.now()).toLocaleDateString(intl.locale, { month: 'long' })}</div>
+        </div>
+        </div>
+        </div>
+       </div>
+    </div>
+        <div>
+            <Pie
+             data={{
+                labels: ["Groceries","Leisure"],
+                datasets: [
+                  {
+                    label: "This month",
+                    data: [12,124],
+                  }
+                ],
+              }}
+            />
+        </div>
      </div>
   );
 };
 
-export default HomePayments;
+export default Summary;

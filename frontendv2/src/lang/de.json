@@ -1,6 +1,7 @@
 {
     "app.header_expenses" : "Ausgaben",
     "app.header_account" : "Mein Konto",
+    "app.header_summary" : "Summary",
     "app.header_add_expense" : "Ausgabe hinzufügen",
     "app.header_edit_expense" : "Ausgabe bearbeiten",
     "app.date" : "Datum",

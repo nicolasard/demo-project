@@ -12,6 +12,7 @@ import {
 import Cookies from 'universal-cookie';
 import Login from './modules/Login';
 import AddPayment from './modules/AddPayment';
+import Summary from './modules/Summary';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
           <Navbar/>
           <Routes>
               <Route path="/myAccount"  element={<MyAccount/>}/>
+              <Route path="/summary"  element={<Summary/>}/>
               <Route path="/expense/:type/:expenseId?"  element={<AddPayment/>}/>
               <Route path="/"  element={<Home/>}/>
           </Routes>
