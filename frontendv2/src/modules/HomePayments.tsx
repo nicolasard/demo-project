@@ -40,17 +40,7 @@ const HomePayments = () => {
 
   const deleteTransaction = async (transaction: Transaction) => {
     try {
-      console.log('Deleting', transaction);
-      console.log('Getting transactions...');
-
-      const cookies = new Cookies();
-      cookies.set('mycookie', 'valor', { path: '/' });
-      console.log(cookies.get('jwt-token'));
-
-      const jwtToken = cookies.get('jwt-token');
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-
+      ApiClient.setupAxiosHeaders();
       await UserControllerApiFactory().deleteTransactions(transaction);
       getTransactions();
     } catch (error) {

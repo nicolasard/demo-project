@@ -1,7 +1,6 @@
-import Cookies from 'universal-cookie';
 import { UserControllerApiFactory, UserProfile } from './generated-api/api';
-import axios from 'axios';
 import React from 'react';
+import ApiClient from './common/ApiClient';
 
 class MyAccount extends React.Component<any,{ userProfile: UserProfile|null }>{
 
@@ -16,13 +15,7 @@ class MyAccount extends React.Component<any,{ userProfile: UserProfile|null }>{
   }
 
   getProfileFromWS(){
-    const cookies = new Cookies();
-    console.log(cookies.get("jwt-token"));
-    // Set your JWT token in the headers
-    const jwtToken = cookies.get("jwt-token"); // Replace with your actual JWT token
-    axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-    axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-
+    ApiClient.setupAxiosHeaders();
     UserControllerApiFactory().getProfile().then((response)=>{
       if (response.status==200){
         this.setState({ userProfile: response.data});

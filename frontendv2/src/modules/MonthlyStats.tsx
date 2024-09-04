@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'universal-cookie';
-import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
@@ -88,7 +86,7 @@ function MonthlyStats() {
        </div>
     </div>
 
-        <div  style={{height:'600'}}>
+        <div style={{height:'600'}}>
         <Line
         datasetIdKey='id'
         options={{

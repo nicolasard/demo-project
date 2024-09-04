@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'universal-cookie';
-import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { Pie } from 'react-chartjs-2';
+import ApiClient from './common/ApiClient';
 
 
 const Summary = () => {
@@ -25,13 +24,7 @@ const Summary = () => {
 
   const getTransactions = async () => {
     try {
-      console.log('Getting transactions...');
-      const cookies = new Cookies();
-      console.log(cookies.get('jwt-token'));
-
-      const jwtToken = cookies.get('jwt-token');
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
+      ApiClient.setupAxiosHeaders();
 
       const response = await UserControllerApiFactory().getTransactionsPage(month,year);
       if (response.status === 200) {
@@ -44,26 +37,6 @@ const Summary = () => {
     }
   };
 
-  const deleteTransaction = async (transaction: Transaction) => {
-    try {
-      console.log('Deleting', transaction);
-      console.log('Getting transactions...');
-
-      const cookies = new Cookies();
-      cookies.set('mycookie', 'valor', { path: '/' });
-      console.log(cookies.get('jwt-token'));
-
-      const jwtToken = cookies.get('jwt-token');
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-
-      await UserControllerApiFactory().deleteTransactions(transaction);
-      getTransactions();
-    } catch (error) {
-      //console.log(error.response.data);
-      // Handle errors or trigger an event to show errors
-    }
-  };
 
   const parseDate = (date: string) => {
     const parsedDate = new Date(date);
@@ -92,8 +65,12 @@ const Summary = () => {
         </div>
        </div>
     </div>
-        <div>
+         <div>
             <Pie
+            options={{
+              maintainAspectRatio: false,
+              animation: false
+            }}
              data={{
                 labels: ["Groceries","Leisure"],
                 datasets: [
