@@ -37,21 +37,6 @@ const Summary = () => {
     }
   };
 
-
-  const parseDate = (date: string) => {
-    const parsedDate = new Date(date);
-    return parsedDate.toLocaleDateString();
-  };
-
-  const goEdit = (transaction: Transaction) => {
-    navigate('expense/edit/'+ transaction.id);
-  }
-
-  const formatDate = (date: string) => {
-    const options:Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric' };
-    return new Date(date).toLocaleDateString(intl.locale,options);
-  };
-
   return (
     <div>
         <div className="container-fluid">
