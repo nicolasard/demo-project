@@ -26,6 +26,9 @@ function Navbar() {
           <a className="nav-link" href="#" aria-current="page" onClick={()=>navigate('/')}><FormattedMessage id = "app.header_expenses"/></a>
         </li>
         <li className="nav-item">
+          <a className="nav-link" href="#" aria-current="page" onClick={()=>navigate('/summary')}><FormattedMessage id = "app.header_summary"/></a>
+        </li>
+        <li className="nav-item">
           <a className="nav-link" href="#" onClick={()=>navigate('/myAccount')}><FormattedMessage id = "app.header_account"/></a>
         </li>
       </ul>

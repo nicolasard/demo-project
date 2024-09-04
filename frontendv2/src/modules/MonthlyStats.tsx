@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'universal-cookie';
-import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import {FormattedMessage} from 'react-intl';
 import { useNavigate } from "react-router-dom"
 import { useIntl } from 'react-intl';
+import ApiClient from './common/ApiClient';
 
 function MonthlyStats() {
 
@@ -32,12 +31,8 @@ function MonthlyStats() {
     
         console.log('Getting transactions...');
     
-        const cookies = new Cookies();
-        const jwtToken = cookies.get('jwt-token');
-    
-        axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-        axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-    
+        ApiClient.setupAxiosHeaders();
+
         const response = await UserControllerApiFactory().getTransactionsReport(month, year);
     
         const totalDaysInMonth = new Date(year, month, 0).getDate();
@@ -91,7 +86,7 @@ function MonthlyStats() {
        </div>
     </div>
 
-        <div  style={{height:'600'}}>
+        <div style={{height:'600'}}>
         <Line
         datasetIdKey='id'
         options={{

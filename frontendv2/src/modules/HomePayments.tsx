@@ -4,6 +4,8 @@ import axios from 'axios';
 import { UserControllerApiFactory, Transaction } from './generated-api/api';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
+import ApiClient from './common/ApiClient';
+
 
 
 const HomePayments = () => {
@@ -24,14 +26,7 @@ const HomePayments = () => {
 
   const getTransactions = async () => {
     try {
-      console.log('Getting transactions...');
-      const cookies = new Cookies();
-      console.log(cookies.get('jwt-token'));
-
-      const jwtToken = cookies.get('jwt-token');
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-
+      ApiClient.setupAxiosHeaders();
       const response = await UserControllerApiFactory().getTransactionsPage(month,year);
       if (response.status === 200) {
         console.log(response.data);
@@ -45,17 +40,7 @@ const HomePayments = () => {
 
   const deleteTransaction = async (transaction: Transaction) => {
     try {
-      console.log('Deleting', transaction);
-      console.log('Getting transactions...');
-
-      const cookies = new Cookies();
-      cookies.set('mycookie', 'valor', { path: '/' });
-      console.log(cookies.get('jwt-token'));
-
-      const jwtToken = cookies.get('jwt-token');
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-      axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
-
+      ApiClient.setupAxiosHeaders();
       await UserControllerApiFactory().deleteTransactions(transaction);
       getTransactions();
     } catch (error) {
