@@ -20,3 +20,23 @@ mvn -Pnative native:compile
 
 ### Swagger documentation
 To check the swagger documentation enter to http://localhost:8080/swagger-ui.html
+
+
+### Code quality 
+
+#### Used but not declared dependencies
+
+To check the dependencies that are used and not directly declared (declared in a transitive way) 
+```
+mvn dependency:analyze -Dverbose=true
+```
+This will point out the used and not declared dependendencies as follow.
+```
+[WARNING] Used undeclared dependencies found:
+[WARNING]    org.springframework.boot:spring-boot-test:jar:3.2.5:test
+[WARNING]       class org.springframework.boot.test.context.SpringBootTest
+[WARNING]    org.springframework:spring-web:jar:6.1.6:compile
+[WARNING]       class org.springframework.web.bind.annotation.ControllerAdvice
+[WARNING]       class org.springframework.web.bind.annotation.PostMapping
+[WARNING]       class org.springframework.web.bind.annotation.PathVariable
+```
