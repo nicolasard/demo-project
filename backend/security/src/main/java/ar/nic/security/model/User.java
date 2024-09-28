@@ -1,12 +1,14 @@
 package ar.nic.security.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
 
 /**
  * Holds the user logged using our own authentication system.
  */
+@Table("security_user")
 public class User {
 
     @Id
