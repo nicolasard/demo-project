@@ -16,6 +16,8 @@ public class User {
 
     private String email;
 
+    private String name;
+
     private String password;
 
     private Integer userStatus;
@@ -80,5 +82,13 @@ public class User {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
