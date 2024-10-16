@@ -27,6 +27,28 @@ paths:
           description: Invalid username or password
         '401':
           description: Unauthorized - Invalid credentials
+  /translate-token:
+    post:
+      summary: Translate token
+      description: Authenticates a using a google oauth token
+      requestBody:
+        description: Oauth token details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslateTokenRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Invalid username or password
+        '401':
+          description: Unauthorized - Invalid credentials
 
   /users:
     post:
@@ -95,12 +117,17 @@ components:
           type: string
           format: password
           example: Pa$$w0rd!
+    TranslateTokenRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     LoginResponse:
       type: object
       properties:
         token:
           type: string
           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        expires_in:
-          type: integer
-          example: 3600

@@ -1,4 +1,4 @@
-package ar.nic.demoproject.utils;
+package ar.nic.security.utils;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSObject;
@@ -7,11 +7,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import java.security.Key;
-import java.security.PublicKey;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,9 +14,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.security.Key;
+import java.security.PublicKey;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+
 /**
- * Reactive services to validate JWT tokens from different providers like google. TODO: Move all
- * auth oauth2 stuff to another mvn package.
+ * Reactive services to validate JWT tokens from different providers like google.
  */
 @Component
 public class JwtValidator {

@@ -3,6 +3,7 @@ package ar.nic.security.service;
 import ar.nic.security.model.User;
 import ar.nic.security.model.UserStatusEnum;
 import ar.nic.security.repository.UserRepository;
+import ar.nic.security.utils.JwtValidator;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -21,18 +22,31 @@ public class LoginService {
 
     final CustomJwtTokenUtils jwtTokenUtils;
 
+    final JwtValidator jwtValidator;
+
     @Autowired
-    public LoginService(final UserRepository userRepository, final CustomJwtTokenUtils jwtTokenUtils) {
+    public LoginService(final UserRepository userRepository, final CustomJwtTokenUtils jwtTokenUtils, JwtValidator jwtValidator) {
         this.userRepository = userRepository;
         this.jwtTokenUtils = jwtTokenUtils;
+        this.jwtValidator = jwtValidator;
     }
 
     /**
-     * Sign in a new user to the system.
+     * Sign in a user to the system.
      */
     public Mono<String> signIn(final String email, final String password){
         return userRepository.findByEmail(email)
                 .map(p -> this.validatePassword(p,password))
+                .map(this::createJwtToken)
+                .switchIfEmpty(Mono.error(new RuntimeException("User doesn't exists")));
+    }
+
+    /**
+     * Sign in a user to the system using JWT tokens
+     */
+    public Mono<String> translateToken(final String token){
+        return this.jwtValidator.validateGoogleToken(token)
+                .flatMap(t->userRepository.findByEmail(t.getEmail()).switchIfEmpty(userRepository.save(createUserFromGoogleToken(t))))
                 .map(this::createJwtToken)
                 .switchIfEmpty(Mono.error(new RuntimeException("User doesn't exists")));
     }
@@ -44,9 +58,13 @@ public class LoginService {
         return userRepository.findByEmail(user.getEmail()).switchIfEmpty(userRepository.save(mapToUser(user)));
     }
 
+    //This method validate that the user ok to log in
     private User validatePassword(final User user, final String password){
         if (user==null){
             throw new RuntimeException("Can not find the user.");
+        }
+        if (user.getUserStatus() != UserStatusEnum.ACTIVATED.getDatabaseStatusId()){
+            throw new RuntimeException("User is not activated.");
         }
         PasswordEncoder passwordEncoder =
                 PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -54,6 +72,14 @@ public class LoginService {
             return user;
         }
         throw new RuntimeException("Invalid user or password.");
+    }
+
+    private User createUserFromGoogleToken(final JwtValidator.JwtUser jwtUSer){
+        final User user = new User();
+        user.setEmail(jwtUSer.getEmail());
+        user.setUserStatus(UserStatusEnum.ACTIVATED.getDatabaseStatusId());
+        user.setName(jwtUSer.getFullName());
+        return user;
     }
 
     private User mapToUser(final User user){

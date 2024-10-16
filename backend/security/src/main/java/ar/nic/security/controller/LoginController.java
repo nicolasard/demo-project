@@ -4,13 +4,10 @@ import ar.nic.security.openapi.model.LoginRequest;
 import ar.nic.security.openapi.model.LoginResponse;
 import ar.nic.security.service.LoginService;
 import io.opentelemetry.api.GlobalOpenTelemetry;
-import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
@@ -38,4 +35,6 @@ public class LoginController implements ar.nic.security.openapi.api.LoginApi {
                 .map(t->new LoginResponse(){{setToken(t);}})
                 .map(t->new ResponseEntity<>(t,HttpStatus.OK));
     }
+
+
 }
