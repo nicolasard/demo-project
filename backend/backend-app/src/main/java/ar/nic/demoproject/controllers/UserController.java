@@ -1,7 +1,6 @@
 package ar.nic.demoproject.controllers;
 
 import ar.nic.demoproject.db.model.*;
-import ar.nic.demoproject.entity.AuthorizeRequest;
 import ar.nic.demoproject.services.CategoryService;
 import ar.nic.demoproject.services.PrincipalMapperService;
 import ar.nic.demoproject.services.TransactionService;
@@ -47,12 +46,6 @@ public class UserController {
                         .startSpan();
         span.end();
         return Mono.just("Hello world");
-    }
-
-    @PostMapping("/authenticate")
-    Mono<String> authenticate(@RequestBody AuthorizeRequest authorizeRequest) {
-        return principalMapper.authenticate(
-                authorizeRequest.getAuthenticationType(), authorizeRequest.getToken());
     }
 
     @GetMapping("/getProfile")

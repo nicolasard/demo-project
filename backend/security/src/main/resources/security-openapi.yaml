@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  title: User Authentication API
+  version: 1.0.0
+  description: API for user login and registration
+
+paths:
+  /login:
+    post:
+      summary: User login
+      description: Authenticates a user using their username and password.
+      requestBody:
+        description: Login details (username and password).
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Invalid username or password
+        '401':
+          description: Unauthorized - Invalid credentials
+  /translate-token:
+    post:
+      summary: Translate token
+      description: Authenticates a using a google oauth token
+      requestBody:
+        description: Oauth token details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslateTokenRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Invalid username or password
+        '401':
+          description: Unauthorized - Invalid credentials
+
+  /users:
+    post:
+      summary: New user registration
+      description: Creates a new user account.
+      requestBody:
+        description: New user registration details.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                email:
+                  type: string
+                  format: email
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  format: password
+                  example: Pa$$w0rd!
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The unique ID of the created user
+                    example: 12345
+                  username:
+                    type: string
+                    description: The username of the created user
+                    example: johndoe
+                  email:
+                    type: string
+                    format: email
+                    description: The email address of the created user
+                    example: johndoe@example.com
+        '400':
+          description: Invalid input data
+        '409':
+          description: Conflict - Username or email already exists
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: johndoe
+        password:
+          type: string
+          format: password
+          example: Pa$$w0rd!
+    TranslateTokenRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
