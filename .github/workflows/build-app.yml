@@ -42,7 +42,7 @@ jobs:
       id: get_last_version
       run: ./getVersion.sh
     - name: Download Artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: frontend-artifacts
         path: ./backend/backend-app/src/main/resources/META-INF/resources
