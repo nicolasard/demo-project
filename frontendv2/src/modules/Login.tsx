@@ -45,7 +45,7 @@ function Login() {
         <div style={{ marginTop: "10px" }} className="alert alert-danger" role="alert">
           {errorMessage}
         </div>}
-        Forgot password - Create account
+        <a href='#'>Forgot password</a> - <a href='#'>Create an account</a>
         <div>
         </div>
         <p style={{ paddingTop:"20px"}} className='fs-6 text'>Handcrafted with <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-heart" viewBox="0 0 16 16">
