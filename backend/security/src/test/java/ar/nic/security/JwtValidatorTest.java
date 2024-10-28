@@ -1,6 +1,8 @@
+package ar.nic.security;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import ar.nic.demoproject.utils.JwtValidator;
+import ar.nic.security.utils.JwtValidator;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.junit.jupiter.api.Disabled;

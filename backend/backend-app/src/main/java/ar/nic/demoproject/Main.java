@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(proxyBeanMethods = false)
+@ComponentScan(basePackages = {"ar.nic.demoproject", "ar.nic.security"}) // Specify both packages
 @OpenAPIDefinition(
         info =
                 @Info(

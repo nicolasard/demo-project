@@ -24,33 +24,6 @@ import type { RequestArgs } from './base';
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
 /**
- * 
- * @export
- * @interface AuthorizeRequest
- */
-export interface AuthorizeRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthorizeRequest
-     */
-    'authenticationType'?: AuthorizeRequestAuthenticationTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthorizeRequest
-     */
-    'token'?: string;
-}
-
-export const AuthorizeRequestAuthenticationTypeEnum = {
-    GoogleAuth: 'GOOGLE_AUTH',
-    DemoAccount: 'DEMO_ACCOUNT'
-} as const;
-
-export type AuthorizeRequestAuthenticationTypeEnum = typeof AuthorizeRequestAuthenticationTypeEnum[keyof typeof AuthorizeRequestAuthenticationTypeEnum];
-
-/**
  * Categories for the expenses
  * @export
  * @interface Category
@@ -68,6 +41,25 @@ export interface Category {
      * @memberof Category
      */
     'categoryName'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CategorySummary
+ */
+export interface CategorySummary {
+    /**
+     * 
+     * @type {Category}
+     * @memberof CategorySummary
+     */
+    'category'?: Category;
+    /**
+     * 
+     * @type {number}
+     * @memberof CategorySummary
+     */
+    'total'?: number;
 }
 /**
  * The ISO 4217 currencies table.
@@ -131,6 +123,38 @@ export interface ErrorResponsesDetails {
      * @memberof ErrorResponsesDetails
      */
     'message'?: string;
+}
+/**
+ * Login details (username and password).
+ * @export
+ * @interface LoginRequest
+ */
+export interface LoginRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'password': string;
+}
+/**
+ * 
+ * @export
+ * @interface LoginResponse
+ */
+export interface LoginResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    'token'?: string;
 }
 /**
  * The total amount of transactions in a day
@@ -201,6 +225,19 @@ export interface Transaction {
     'category'?: Category;
 }
 /**
+ * Oauth token details
+ * @export
+ * @interface TranslateTokenRequest
+ */
+export interface TranslateTokenRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof TranslateTokenRequest
+     */
+    'token': string;
+}
+/**
  * The user information in the system.
  * @export
  * @interface UserProfile
@@ -233,21 +270,22 @@ export interface UserProfile {
 }
 
 /**
- * UserControllerApi - axios parameter creator
+ * LoginApi - axios parameter creator
  * @export
  */
-export const UserControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const LoginApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
-         * @param {AuthorizeRequest} authorizeRequest 
+         * Authenticates a user using their username and password.
+         * @summary User login
+         * @param {LoginRequest} loginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authenticate: async (authorizeRequest: AuthorizeRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'authorizeRequest' is not null or undefined
-            assertParamExists('authenticate', 'authorizeRequest', authorizeRequest)
-            const localVarPath = `/api/authenticate`;
+        loginPost: async (loginRequest: LoginRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'loginRequest' is not null or undefined
+            assertParamExists('loginPost', 'loginRequest', loginRequest)
+            const localVarPath = `/security/login`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -266,13 +304,197 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(authorizeRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(loginRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
                 options: localVarRequestOptions,
             };
         },
+    }
+};
+
+/**
+ * LoginApi - functional programming interface
+ * @export
+ */
+export const LoginApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = LoginApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Authenticates a user using their username and password.
+         * @summary User login
+         * @param {LoginRequest} loginRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async loginPost(loginRequest: LoginRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.loginPost(loginRequest, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['LoginApi.loginPost']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * LoginApi - factory interface
+ * @export
+ */
+export const LoginApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = LoginApiFp(configuration)
+    return {
+        /**
+         * Authenticates a user using their username and password.
+         * @summary User login
+         * @param {LoginRequest} loginRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loginPost(loginRequest: LoginRequest, options?: any): AxiosPromise<LoginResponse> {
+            return localVarFp.loginPost(loginRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * LoginApi - object-oriented interface
+ * @export
+ * @class LoginApi
+ * @extends {BaseAPI}
+ */
+export class LoginApi extends BaseAPI {
+    /**
+     * Authenticates a user using their username and password.
+     * @summary User login
+     * @param {LoginRequest} loginRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LoginApi
+     */
+    public loginPost(loginRequest: LoginRequest, options?: AxiosRequestConfig) {
+        return LoginApiFp(this.configuration).loginPost(loginRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * TranslateTokenApi - axios parameter creator
+ * @export
+ */
+export const TranslateTokenApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Authenticates a using a google oauth token
+         * @summary Translate token
+         * @param {TranslateTokenRequest} translateTokenRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        translateTokenPost: async (translateTokenRequest: TranslateTokenRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'translateTokenRequest' is not null or undefined
+            assertParamExists('translateTokenPost', 'translateTokenRequest', translateTokenRequest)
+            const localVarPath = `/security/translate-token`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(translateTokenRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TranslateTokenApi - functional programming interface
+ * @export
+ */
+export const TranslateTokenApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TranslateTokenApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Authenticates a using a google oauth token
+         * @summary Translate token
+         * @param {TranslateTokenRequest} translateTokenRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async translateTokenPost(translateTokenRequest: TranslateTokenRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.translateTokenPost(translateTokenRequest, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['TranslateTokenApi.translateTokenPost']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * TranslateTokenApi - factory interface
+ * @export
+ */
+export const TranslateTokenApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TranslateTokenApiFp(configuration)
+    return {
+        /**
+         * Authenticates a using a google oauth token
+         * @summary Translate token
+         * @param {TranslateTokenRequest} translateTokenRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        translateTokenPost(translateTokenRequest: TranslateTokenRequest, options?: any): AxiosPromise<LoginResponse> {
+            return localVarFp.translateTokenPost(translateTokenRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TranslateTokenApi - object-oriented interface
+ * @export
+ * @class TranslateTokenApi
+ * @extends {BaseAPI}
+ */
+export class TranslateTokenApi extends BaseAPI {
+    /**
+     * Authenticates a using a google oauth token
+     * @summary Translate token
+     * @param {TranslateTokenRequest} translateTokenRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TranslateTokenApi
+     */
+    public translateTokenPost(translateTokenRequest: TranslateTokenRequest, options?: AxiosRequestConfig) {
+        return TranslateTokenApiFp(this.configuration).translateTokenPost(translateTokenRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * UserControllerApi - axios parameter creator
+ * @export
+ */
+export const UserControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
         /**
          * 
          * @param {Transaction} transaction 
@@ -315,6 +537,43 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
          */
         getCategories: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/categories`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} month 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCategorySummary: async (month: number, year: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'month' is not null or undefined
+            assertParamExists('getCategorySummary', 'month', month)
+            // verify required parameter 'year' is not null or undefined
+            assertParamExists('getCategorySummary', 'year', year)
+            const localVarPath = `/api/category-summary/{year}/{month}`
+                .replace(`{${"month"}}`, encodeURIComponent(String(month)))
+                .replace(`{${"year"}}`, encodeURIComponent(String(year)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -481,6 +740,35 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hi: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/hi`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {Transaction} transaction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -561,18 +849,6 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {AuthorizeRequest} authorizeRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async authenticate(authorizeRequest: AuthorizeRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.authenticate(authorizeRequest, options);
-            const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['UserControllerApi.authenticate']?.[index]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
-        },
-        /**
-         * 
          * @param {Transaction} transaction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -592,6 +868,19 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCategories(options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['UserControllerApi.getCategories']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} month 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCategorySummary(month: number, year: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CategorySummary>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCategorySummary(month, year, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['UserControllerApi.getCategorySummary']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
@@ -645,6 +934,17 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hi(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hi(options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['UserControllerApi.hi']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * 
          * @param {Transaction} transaction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -679,15 +979,6 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
     return {
         /**
          * 
-         * @param {AuthorizeRequest} authorizeRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authenticate(authorizeRequest: AuthorizeRequest, options?: any): AxiosPromise<string> {
-            return localVarFp.authenticate(authorizeRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {Transaction} transaction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -702,6 +993,16 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
          */
         getCategories(options?: any): AxiosPromise<Array<Category>> {
             return localVarFp.getCategories(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} month 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCategorySummary(month: number, year: number, options?: any): AxiosPromise<Array<CategorySummary>> {
+            return localVarFp.getCategorySummary(month, year, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -742,6 +1043,14 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hi(options?: any): AxiosPromise<string> {
+            return localVarFp.hi(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {Transaction} transaction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -770,17 +1079,6 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
 export class UserControllerApi extends BaseAPI {
     /**
      * 
-     * @param {AuthorizeRequest} authorizeRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserControllerApi
-     */
-    public authenticate(authorizeRequest: AuthorizeRequest, options?: AxiosRequestConfig) {
-        return UserControllerApiFp(this.configuration).authenticate(authorizeRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @param {Transaction} transaction 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -798,6 +1096,18 @@ export class UserControllerApi extends BaseAPI {
      */
     public getCategories(options?: AxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).getCategories(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} month 
+     * @param {number} year 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserControllerApi
+     */
+    public getCategorySummary(month: number, year: number, options?: AxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).getCategorySummary(month, year, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -843,6 +1153,16 @@ export class UserControllerApi extends BaseAPI {
      */
     public getTransactionsReport(month: number, year: number, options?: AxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).getTransactionsReport(month, year, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserControllerApi
+     */
+    public hi(options?: AxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).hi(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

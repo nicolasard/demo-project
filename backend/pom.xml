@@ -19,6 +19,7 @@
 
     <modules>
         <module>backend-app</module>
+        <module>security</module>
     </modules>
 
     <properties>

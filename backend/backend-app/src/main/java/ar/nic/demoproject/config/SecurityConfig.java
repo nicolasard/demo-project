@@ -1,7 +1,7 @@
 package ar.nic.demoproject.config;
 
-import ar.nic.demoproject.utils.CustomJwtTokenUtils;
-import java.security.*;
+import ar.nic.security.service.CustomJwtTokenUtils;
+import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,8 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/api/hi",
                         "/api/authenticate/**",
-                        "/swagger-ui.html")
+                        "/swagger-ui.html",
+                        "/security/**")
                 .permitAll()
                 .anyExchange()
                 .authenticated()
