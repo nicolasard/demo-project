@@ -94,7 +94,7 @@ function onSuccess(credentialResponse: CredentialResponse){
   TranslateTokenApiFactory().translateTokenPost(translateTokenRequest).then( (response)=>{
     console.log(response);
     document.cookie = 'jwt-token='+response.data.token;
-    window.location.reload();
+    navigate('/');
   }).catch((e)=>{
     console.log('Exception calling '+e);
   })
