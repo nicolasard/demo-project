@@ -9,8 +9,7 @@ function Navbar() {
   const logout = () =>{
     const cookies = new Cookies();
     cookies.remove('jwt-token');
-    navigate('/');
-    window.location.reload();
+    navigate('/login');
   }
 
   return (

@@ -2,9 +2,13 @@ import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import {  TranslateTokenApiFactory, LoginApiFactory, UserControllerApiFactory, TranslateTokenRequest, LoginRequest } from './generated-api/api';
 import axios from 'axios';
 import { useState,ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Login() {
+
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>('');
 
@@ -67,8 +71,8 @@ function onLogin(event: React.SyntheticEvent<HTMLFormElement>){
   };
   LoginApiFactory().loginPost(loginRequest).then( (response)=>{
     console.log(response);
-    document.cookie = 'jwt-token='+response.data;
-    window.location.reload();
+    document.cookie = 'jwt-token='+response.data.token;
+    navigate('/');
   }).catch((e)=>{
     setErrorMessage('User or password invalid');
     console.log('Exception calling '+e);
@@ -89,8 +93,8 @@ function onSuccess(credentialResponse: CredentialResponse){
   }
   TranslateTokenApiFactory().translateTokenPost(translateTokenRequest).then( (response)=>{
     console.log(response);
-    document.cookie = 'jwt-token='+response.data;
-    window.location.reload();
+    document.cookie = 'jwt-token='+response.data.token;
+    navigate('/');
   }).catch((e)=>{
     console.log('Exception calling '+e);
   })
