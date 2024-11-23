@@ -11,7 +11,11 @@ class ApiClient{
     static setupAxiosHeaders(){
         const cookies = new Cookies();
         const jwtToken = cookies.get('jwt-token');
-        axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+        if (jwtToken) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+        } else {
+            delete axios.defaults.headers.common['Authorization'];
+        }
         axios.defaults.baseURL = process.env.REACT_APP_API_PREFIX || window.location.origin;
     }
 
