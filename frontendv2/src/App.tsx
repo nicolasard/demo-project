@@ -8,6 +8,7 @@ import {
   Route,
   Routes,
   useLocation,
+  Navigate,
 } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import Login from './modules/Login';
@@ -39,16 +40,47 @@ function AppLayout({ auth }: { auth: string | undefined }) {
     <div>
       {showNavbar && <Navbar />}
       <Routes>
-        <Route path="/myAccount" element={<MyAccount />} />
-        <Route path="/summary" element={<Summary />} />
-        <Route path="/expense/:type/:expenseId?" element={<AddPayment />} />
-        <Route path="/" element={<Home />} />
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<CreateAccount />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/myAccount"
+          element={<ProtectedRoute auth={auth}><MyAccount /></ProtectedRoute>}
+        />
+        <Route
+          path="/summary"
+          element={<ProtectedRoute auth={auth}><Summary /></ProtectedRoute>}
+        />
+        <Route
+          path="/expense/:type/:expenseId?"
+          element={<ProtectedRoute auth={auth}><AddPayment /></ProtectedRoute>}
+        />
+        <Route
+          path="/"
+          element={<ProtectedRoute auth={auth}><Home /></ProtectedRoute>}
+        />
       </Routes>
     </div>
   );
+}
+
+function ProtectedRoute({
+  auth,
+  children,
+}: {
+  auth: string | undefined;
+  children: React.ReactNode;
+}) {
+  if (!auth) {
+    // Redirect to login if not authenticated
+    return <Navigate to="/login" replace />;
+  }
+
+  // Render the child component if authenticated
+  return <>{children}</>;
 }
 
 export default App;
