@@ -5,11 +5,14 @@ import ar.nic.security.model.UserStatusEnum;
 import ar.nic.security.openapi.model.UsersPost201Response;
 import ar.nic.security.openapi.model.UsersPostRequest;
 import ar.nic.security.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class UserService {
@@ -18,7 +21,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+
+     @Autowired
     public UserService(MailSender mailSender, UserRepository userRepository) {
         this.mailSender = mailSender;
         this.userRepository = userRepository;
@@ -30,23 +35,33 @@ public class UserService {
                 .flatMap(this::preValidations)
                 .map(this::mapNewUserRequest)
                 .flatMap(userRepository::save)
-                .doOnNext( data -> this.sendActivationEmail(data.getEmail(),data.getId()))
+                .doOnNext( data -> this.fireAndForget(data.getEmail(),data.getId()))
                 .map(this::mapResponse);
+    }
+
+    public Mono<Void> fireAndForget(final String email, final Long id) {
+        return Mono.fromRunnable(() -> this.sendActivationEmail(email,id))
+                .subscribeOn(Schedulers.boundedElastic()) // Offload to a separate thread
+                .then(); // Return a Mono<Void>
     }
 
     /**
      * Send activation email
      */
     private void sendActivationEmail(final String email, final Long id){
-        final String activationCode = "123";
-        final SimpleMailMessage simpleMailMensage = new SimpleMailMessage();
-        simpleMailMensage.setText("Activate your user at myexpenses.com.ar");
-        simpleMailMensage.setText("Thanks to register to myexpenses.com.ar.\n\n" +
-                "please follow the link <link> to activate your accounts.\n\n" +
-                "Thanks!,\n" +
-                "MyExpenses App.");
-        simpleMailMensage.setTo(email);
-        this.mailSender.send(simpleMailMensage);
+        try {
+            final String activationCode = "123";
+            final SimpleMailMessage simpleMailMensage = new SimpleMailMessage();
+            simpleMailMensage.setText("Activate your user at myexpenses.com.ar");
+            simpleMailMensage.setText("Thanks to register to myexpenses.com.ar.\n\n" +
+                    "please follow the link <link> to activate your accounts.\n\n" +
+                    "Thanks!,\n" +
+                    "MyExpenses App.");
+            simpleMailMensage.setTo(email);
+            this.mailSender.send(simpleMailMensage);
+        }catch (final RuntimeException e){
+            LOG.error("Error trying to send email", e);
+        }
     }
 
     /**
